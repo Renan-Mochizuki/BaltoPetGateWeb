@@ -35,7 +35,6 @@ const style = ({
     campo: {
         flex: 1,
         fontSize: 18,
-        height: "100%",
         paddingLeft: 12,
         backgroundColor: corFundoCampoCad,
         borderRadius: 20,

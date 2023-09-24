@@ -7,7 +7,6 @@ import ContainerCadastro from '../../components/cadastro/ContainerCadastro';
 import ValidarCamposCad from '../../utils/ValidarCamposCad';
 import axios from 'axios';
 import { urlAPI } from '../../constants';
-import AsyncStorage from '@react-native-async-storage/async-storage';
 
 const CadUsuario = () => {
   const [email, setEmail] = useState('');
@@ -38,10 +37,13 @@ const CadUsuario = () => {
       TB_PESSOA_EMAIL: email,
       TB_PESSOA_SENHA: senha,
     }).then(async response => {
+      setMensagem('Cadastrado!');
       const TokenUsuario = response.data.token;
-      await AsyncStorage.removeItem('token');
-      await AsyncStorage.setItem('token', TokenUsuario);
-      window.location.replace('/Animal');
+      await localStorage.removeItem('token');
+      await localStorage.setItem('token', TokenUsuario);
+      setTimeout(() => {
+        window.location.replace('/Animal');
+      }, 1500)
     }).catch(error => {
       let erro = error.response.data.message;
       setMensagem(erro);
@@ -58,8 +60,8 @@ const CadUsuario = () => {
         <CampoSimples set={setEmail} placeholder={"Email"} />
         <CampoSenha set1={setSenha} set2={setSenhaConfirmacao} />
       </GroupBox>
-      {mensagem && <p style={{ color: 'red' }}>{mensagem}</p>}
-      <BotaoCadastrar onClick={Cadastrar} />
+      {mensagem && <p style={{ color: mensagem == 'Cadastrado!' ? '#fff' : 'red' }}>{mensagem}</p>}
+      <BotaoCadastrar onClick={Cadastrar} className="botaoCadastro" />
     </ContainerCadastro>
   )
 }

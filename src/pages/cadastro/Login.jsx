@@ -1,7 +1,6 @@
 import { useState } from "react";
 import { urlAPI, corBotaoCad, corFundoCad, corFundoCampoCad, corPlaceholderCad, corTextoBotaoCad, corBordaBoxCad } from "../../constants";
 import axios from 'axios';
-import AsyncStorage from "@react-native-async-storage/async-storage";
 import { FaRegEye, FaRegEyeSlash } from 'react-icons/fa'
 
 const Login = () => {
@@ -15,6 +14,7 @@ const Login = () => {
         if (!email || !senha) {
             alert("Insira seu email e senha.");
         } else {
+            setMensagem('Verificando...');
             Autenticar();
         }
     };
@@ -24,10 +24,11 @@ const Login = () => {
             TB_PESSOA_EMAIL: email,
             TB_PESSOA_SENHA: senha,
         }).then(async (response) => {
+            setMensagem('Login realizado.');
             setCarregando(true);
             const TokenUsuario = response.data.token;
-            await AsyncStorage.removeItem('token');
-            await AsyncStorage.setItem('token', TokenUsuario);
+            await localStorage.removeItem('token');
+            await localStorage.setItem('token', TokenUsuario);
             setTimeout(() => {
                 window.location.replace('/Animal');
             }, 1500);
@@ -44,7 +45,7 @@ const Login = () => {
             <img
                 style={style.imagem} src="./img/Logo.png"
             />
-            {mensagem && <p style={style.mensagem}>{mensagem}</p>}
+            {mensagem && <p style={{ color: mensagem == 'Usuário ou senha inválidos.' ? 'red' : '#fff' }}>{mensagem}</p>}
             <div style={style.containercampo}>
                 <input
                     onChange={(text) => setEmail(text.target.value)}
@@ -59,16 +60,16 @@ const Login = () => {
                             onChange={(text) => setSenha(text.target.value)}
                             placeholder={"Senha"}
                             style={style.campo}
-                            type={!mostrarSenha ? 'text' : 'password'}
+                            type={mostrarSenha ? 'text' : 'password'}
                         />
                         <button
                             onClick={() => setMostrarSenha(!mostrarSenha)}
                             style={style.botaoSenha}
                         >
                             {mostrarSenha ? (
-                                <FaRegEye color="grey" size={30} />
-                            ) : (
                                 <FaRegEyeSlash color="grey" size={30} />
+                            ) : (
+                                <FaRegEye color="grey" size={30} />
                             )}
                         </button>
                     </div>
@@ -89,17 +90,20 @@ const Login = () => {
             {carregando &&
                 <div style={style.carregandoContainer}>
                     <div style={style.carregando}>
-                        {/* <ActivityIndicator size="large" color={corBordaBoxCad} /> */}
+                        <div className="basic"></div>
                     </div>
                 </div>}
 
             <button onClick={async () => {
-                const TokenUsuario = await AsyncStorage.getItem('token');
+                const TokenUsuario = await localStorage.getItem('token');
                 if (TokenUsuario == null) {
-                    await AsyncStorage.setItem('token', 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJUQl9QRVNTT0FfSUREIjoxNSwiVEJfVElQT19JREQiOjEsImlhdCI6MTY5NDcxMjMwMywiZXhwIjoxNjk5ODk2MzAzfQ.9fxNd1tW70-m3LXUVDD7nnb4IgH0cyoMgX78rhVtfaE');
+                    setCarregando(true);
+                    await localStorage.setItem('token', 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJUQl9QRVNTT0FfSUREIjoxNSwiVEJfVElQT19JREQiOjEsImlhdCI6MTY5NDcxMjMwMywiZXhwIjoxNjk5ODk2MzAzfQ.9fxNd1tW70-m3LXUVDD7nnb4IgH0cyoMgX78rhVtfaE');
                     setTimeout(() => {
+                        window.location.replace('/Animal');
                     }, 1500);
                 }
+                window.location.replace('/Animal');
             }}>
                 <p>PULAR</p>
             </button>
@@ -206,9 +210,6 @@ const style = ({
     },
     botaoSenha: {
         marginRight: 10,
-    },
-    mensagem: {
-        color: 'red',
     },
     carregandoContainer: {
         flex: 1,

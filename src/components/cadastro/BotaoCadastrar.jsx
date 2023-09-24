@@ -9,6 +9,7 @@ const BotaoCadastrar = (props) => {
 const styles = ({
     botaocadastro: {
         width: '80%',
+        minHeight: 50,
         height: 50,
         display: 'flex',
         justifyContent: 'center',

@@ -1,8 +1,6 @@
 export default function ValidarCamposCad(camposObrigatorios, dados) {
     let mensagemErro = "";
     const criteriosEmail = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-    const criteriosNome = /^(?=.*\s)(.{8,})$/;
-    const criteriosNomePerfil = /^.{3,}$/;
     const criteriosSenha = /^(?=.*[A-Z])(?=.*\d).{8,}$/;
     const criteriosTelefone = /^\d{10,13}$/;
     const criteriosUrl = /^.{15,}$/;
@@ -54,9 +52,6 @@ export default function ValidarCamposCad(camposObrigatorios, dados) {
         mensagemErro = "Complete todos os campos obrigatórios.";
     }
     else {
-        if (nome && !criteriosNome.test(nome)) {
-            mensagemErro += "Nome completo inválido.\n";
-        }
         if (dtNasc && dtNasc == 1) {
             mensagemErro += "Data de nascimento inválida.\n";
         }
@@ -68,9 +63,6 @@ export default function ValidarCamposCad(camposObrigatorios, dados) {
         }
         if ((uf || cidade || bairro || rua) && (!uf || !cidade || !bairro || !rua || !numero)) {
             mensagemErro += "Complete o endereço.\n";
-        }
-        if (nomePerfil && !criteriosNomePerfil.test(nomePerfil)) {
-            mensagemErro += "Nome de perfil inválido.\n";
         }
         // if (cnpj && (cnpj == 1 || !ValidarCnpj(cnpj))) {
         //     mensagemErro += "CNPJ inválido.\n";
