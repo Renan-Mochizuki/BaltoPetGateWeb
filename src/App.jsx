@@ -12,11 +12,11 @@ function App() {
     <Router>
       <Routes>
         <Route exact path="/" element={<Temporario />} />
-        <Route exact path="/Login" element={<Login />} />
-        <Route exact path="/CadAnimal" element={<CadAnimal />} />
-        <Route exact path="/Animal" element={<Animal />} />
-        <Route exact path="/CadUsuario" element={<CadUsuario />} />
-        <Route exact path="/Ficha" element={<Ficha />} />
+        <Route path="/Login" element={<Login />} />
+        <Route path="/CadAnimal" element={<CadAnimal />} />
+        <Route path="/Animal" element={<Animal />} />
+        <Route path="/CadUsuario" element={<CadUsuario />} />
+        <Route path="/Ficha/:id" element={<Ficha />} />
       </Routes>
     </Router>
   )

@@ -3,7 +3,7 @@ const Temporario = () => {
     return (
         <>
             <div>Temporario</div>
-
+            <br />
             <a href='/CadAnimal'>CadAnimal</a>
             <br />
             <a href='/Login'>Login</a>
