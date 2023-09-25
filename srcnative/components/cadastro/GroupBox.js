@@ -19,7 +19,7 @@ const styles = StyleSheet.create({
         borderWidth: 2,
         borderColor: corBordaBoxCad,
         borderRadius: 10,
-        marginVertical: 20,
+        marginTop: 20,
         position: 'relative',
     },
     titulo: {

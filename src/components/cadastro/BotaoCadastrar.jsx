@@ -1,17 +1,16 @@
-import { Text, TouchableOpacity, StyleSheet } from 'react-native';
-
 const BotaoCadastrar = (props) => {
     return (
-        <TouchableOpacity {...props} style={styles.botaocadastro}>
-            <Text style={styles.textocadastro}>{props.texto ? props.texto : 'Cadastrar'}</Text>
-        </TouchableOpacity>
+        <button style={styles.botaocadastro} {...props}>
+            {props.texto ? props.texto : 'Cadastrar'}
+        </button>
     )
 }
 
-const styles = StyleSheet.create({
+const styles = ({
     botaocadastro: {
         width: '80%',
         height: 50,
+        display: 'flex',
         justifyContent: 'center',
         alignItems: 'center',
         backgroundColor: "#E0A8A8",
@@ -19,11 +18,9 @@ const styles = StyleSheet.create({
         marginTop: 10,
         marginBottom: 35,
         elevation: 5,
-    },
-    textocadastro: {
         color: "#fff",
         fontSize: 20,
-    },
+    }
 });
 
 export default BotaoCadastrar
