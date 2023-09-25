@@ -16,9 +16,18 @@ button, input{
 .groupBox{
   border: solid 2px #CE7272;
 }
-
-
-
+.profileImg{
+  width: 100px; 
+  height: 100px; 
+  object-fit: cover;
+  object-position: center;
+}
+.animalImgContainer{
+  width: 500px; 
+  height: 500px; 
+  object-fit: cover;
+  object-position: center;
+}
 
 
 
