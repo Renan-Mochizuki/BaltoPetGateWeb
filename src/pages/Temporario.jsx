@@ -1,5 +1,21 @@
+import axios from "axios";
+import { useEffect, useState } from "react";
+import { urlAPI, urlLocal } from "../constants";
+import ConverterImg from "../utils/ConverterImg";
 
 const Temporario = () => {
+    const [pessoas, setPessoas] = useState([]);
+
+    useEffect(() => {
+        axios.get(urlAPI + 'selpessoa')
+            .then(response => {
+                const data = response.data;
+                setPessoas(data);
+            }).catch(error => {
+                console.error(error);
+            })
+    }, []);
+
     return (
         <>
             <div>Temporario</div>
@@ -12,7 +28,19 @@ const Temporario = () => {
             <br />
             <a href='/CadUsuario'>CadUsuario</a>
             <br />
-            <a href='/Ficha'>Ficha</a>
+            <a href='/Ficha/1'>Ficha</a>
+            <ul>
+                {pessoas.map((item, index) => {
+                    const url = urlAPI + "selpessoaimg/" + item.TB_PESSOA_ID;
+                    return (
+                        <li key={index}>
+                            <strong>Nome do Perfil:</strong> {item.TB_PESSOA_NOME_PERFIL}<br />
+                            <img src={url} alt="Imagem" style={{ width: 'auto', height: 350 }} />
+                            <br />
+                        </li>
+                    )
+                })}
+            </ul>
         </>
     )
 }

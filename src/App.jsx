@@ -6,6 +6,8 @@ import Animal from './pages/navegacao/Animal'
 import CadUsuario from './pages/cadastro/CadUsuario'
 import Ficha from './pages/Ficha'
 import Temporario from './pages/Temporario'
+import Teste from './pages/navegacao/Teste'
+
 function App() {
 
   return (
@@ -17,6 +19,7 @@ function App() {
         <Route path="/Animal" element={<Animal />} />
         <Route path="/CadUsuario" element={<CadUsuario />} />
         <Route path="/Ficha/:id" element={<Ficha />} />
+        <Route path="/Teste" element={<Teste />} />
       </Routes>
     </Router>
   )

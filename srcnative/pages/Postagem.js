@@ -94,35 +94,35 @@ const Postagem = () => {
   };
 
   // Definindo uma função para escolher uma imagem da galeria ou da câmera
-const escolherImagem = async () => {
-  // Chamando a função para pedir permissão
-  await pedirPermissao();
-  // Criando as opções para o ImagePicker
-  const opcoes = {
-    mediaTypes: ImagePicker.MediaTypeOptions.Images,
-    allowsEditing: true,
-    aspect: [4, 3],
-    quality: 1,
-  };
+  const escolherImagem = async () => {
+    // Chamando a função para pedir permissão
+    await pedirPermissao();
+    // Criando as opções para o ImagePicker
+    const opcoes = {
+      mediaTypes: ImagePicker.MediaTypeOptions.Images,
+      allowsEditing: true,
+      aspect: [4, 3],
+      quality: 1,
+    };
 
-  // Chamando o método launchImageLibraryAsync do ImagePicker
-  let resposta = await ImagePicker.launchImageLibraryAsync(opcoes);
+    // Chamando o método launchImageLibraryAsync do ImagePicker
+    let resposta = await ImagePicker.launchImageLibraryAsync(opcoes);
 
-  // Verificando se houve algum erro ou cancelamento
-  if (!resposta.canceled) {
-    // Verificando se há um item na matriz assets
-    if (resposta.assets.length > 0) {
-      // Acessando a matriz "assets" para obter o caminho da imagem escolhida
-      const imagemEscolhida = resposta.assets[0];
-      if (imagemEscolhida) {
-        // Atualizando o estado da imagem com o caminho da imagem escolhida
-        setImagem(imagemEscolhida.uri);
+    // Verificando se houve algum erro ou cancelamento
+    if (!resposta.canceled) {
+      // Verificando se há um item na matriz assets
+      if (resposta.assets.length > 0) {
+        // Acessando a matriz "assets" para obter o caminho da imagem escolhida
+        const imagemEscolhida = resposta.assets[0];
+        if (imagemEscolhida) {
+          // Atualizando o estado da imagem com o caminho da imagem escolhida
+          setImagem(imagemEscolhida.uri);
+        }
+      } else {
+        alert("Não foi possível obter a imagem selecionada.");
       }
-    } else {
-      alert("Não foi possível obter a imagem selecionada.");
     }
-  }
-};
+  };
 
 
   // Definindo uma função para editar o comentário
@@ -353,6 +353,32 @@ const styles = StyleSheet.create({
     padding: 10,
     borderRadius: 5,
   },
+
+
+
+  container: {
+    width: 500,
+    minHeight: '100%',
+  },
+  card: {
+    width: '100%',
+
+  },
+  cardHeader: {
+    display: "flex",
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    height: 60
+  },
+  cardUser: {
+    display: 'flex',
+    flexDirection: 'row',
+    columnGap: 40,
+    marginLeft: 10,
+  },
+  cardContent: {
+
+  }
 });
 
 // Exportando o componente
