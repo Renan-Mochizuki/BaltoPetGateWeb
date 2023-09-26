@@ -4,8 +4,10 @@ import TextoMultiplo from "../components/ficha/TextoMultiplo"
 import TextoMenor from "../components/ficha/TextoMenor"
 import TextoOpcional from "../components/ficha/TextoOpcional"
 import {corFundo, corFundoCad, corFundoCampoCad, corPlaceholderCad, corTextoBotaoCad, corBordaBoxCad } from "../constants";
+import { useParams } from "react-router-dom";
 
 const Ficha = () => {
+  const { id } = useParams();
   return (
     <div>
     <div style={styles.Container}>

@@ -2,7 +2,7 @@ import { corFundoCad } from "../../constants";
 
 const ContainerCadastro = (props) => {
   return (
-    <div style={style.container}>
+    <div style={style.container} className="ContainerCadastro">
       <img style={style.imagem} src="./img/Logo.png" />
       <p style={style.titulo}>{props.titulo}</p>
       {props.children}
@@ -19,6 +19,8 @@ const style = ({
     justifyContent: 'center',
     // flex: 1,
     flexDirection: 'column',
+    
+    minHeight: '100%'
   },
   imagem: {
     height: 150,

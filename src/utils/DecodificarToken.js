@@ -1,11 +1,10 @@
 import { chaveToken } from "../constants";
-import JWT from 'expo-jwt';
-import AsyncStorage from "@react-native-async-storage/async-storage";
+import jwtDecode from "jwt-decode";
 
 export default async function DecodificarToken() {
     try {
-        const TokenUsuario = await AsyncStorage.getItem('token');
-        const decodedToken = JWT.decode(TokenUsuario, chaveToken);
+        const TokenUsuario = await localStorage.getItem('token');
+        const decodedToken = jwtDecode(TokenUsuario);
         const { TB_PESSOA_IDD, TB_TIPO_IDD } = decodedToken;
         return { TB_PESSOA_IDD, TB_TIPO_IDD };
     } catch (erro) {
