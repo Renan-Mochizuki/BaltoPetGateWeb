@@ -3,79 +3,118 @@ import TextoComum from "../components/ficha/TextoComum"
 import TextoMultiplo from "../components/ficha/TextoMultiplo"
 import TextoMenor from "../components/ficha/TextoMenor"
 import TextoOpcional from "../components/ficha/TextoOpcional"
-import {corFundo, corFundoCad, corFundoCampoCad, corPlaceholderCad, corTextoBotaoCad, corBordaBoxCad } from "../constants";
+import { corFundo, corFundoCad, corFundoCampoCad, corPlaceholderCad, corTextoBotaoCad, corBordaBoxCad, urlAPI } from "../constants";
 import { useParams } from "react-router-dom";
+import { useEffect, useState } from "react"
+import axios from "axios"
 
 const Ficha = () => {
-  const { id } = useParams();
-  return (
-    <div>
-    <div style={styles.Container}>
-        {/* <img style={styles.Imagem} resizeMode='cover' source={require('../../assets/img/dog.png')} /> */}
-        <div style={styles.Conjunto1}>
-            <TextoComum textoTitulo='Nome:' textoDescricao='Nilsinho' />
-            <TextoComum textoTitulo='Porte:' textoDescricao='Médio' />
-        </div>
-        <div style={styles.Conjunto2} className="groupBox">
-            <TextoComum textoTitulo='12' textoDescricao='Kg' />
-            <div style={styles.Barras} className="Barras">
-                <TextoComum textoDescricao='Macho' />
+    const { id } = useParams();
+
+    let tipoIdade;
+
+    const [select, setSelect] = useState([]);
+
+    const Selecionar = async () => {
+        await axios.post(urlAPI + 'selanimal/filtrar', {
+            TB_ANIMAL_ID: id
+        }).then((response) => {
+            setSelect(response.data[0]);
+        }).catch((error) => {
+            ToastAndroid.show('Erro ao exibir itens ' + error.response.data.message, ToastAndroid.SHORT);
+        })
+    };
+
+    useEffect(() => {
+        Selecionar();
+    }, [])
+
+    if (select.TB_ANIMAL_IDADE_TIPO == 'MES' && select.TB_ANIMAL_IDADE == 1) {
+        tipoIdade = 'Mês'
+    } else if (select.TB_ANIMAL_IDADE_TIPO == 'ANO' && select.TB_ANIMAL_IDADE == 1) {
+        tipoIdade = 'Ano'
+    } else if (select.TB_ANIMAL_IDADE_TIPO == 'MES') {
+        tipoIdade = 'Meses'
+    } else {
+        tipoIdade = 'Anos'
+    }
+
+    return (
+        <div style={styles.ContainerMain}>
+            <div style={styles.Container}>
+                <div style={styles.ImgContainer}>
+                    <img style={styles.Imagem} src="http://via.placeholder.com/200" alt="Imagem do animal" />
+                </div>
+                <div style={styles.Conjunto1}>
+                    <TextoComum textoTitulo='Nome:' textoDescricao={select.TB_ANIMAL_NOME} />
+                    <TextoComum textoTitulo='Porte:' textoDescricao={select.TB_ANIMAL_PORTE == 'PEQUENO' ? 'Pequeno' : select.TB_ANIMAL_PORTE == 'MEDIO' ? 'Médio' : select.TB_ANIMAL_PORTE == 'GRANDE' ? 'Grande' : select.TB_ANIMAL_PORTE} />
+                </div>
+                <div style={styles.Conjunto2} className="groupBox">
+                    <TextoComum textoTitulo={select.TB_ANIMAL_PESO} textoDescricao='Kg' />
+                    <div style={styles.Barras} className="Barras">
+                        <TextoComum textoDescricao={select.TB_ANIMAL_SEXO == 'MACHO' ? 'Macho' : 'Fêmea'} />
+                    </div>
+                    <TextoComum textoTitulo={select.TB_ANIMAL_IDADE} textoDescricao={tipoIdade} />
+                </div>
+                <div style={styles.Conjunto3}>
+                    <TextoComum textoTitulo='Temperamento:' />
+                    <TextoMultiplo textoMultiplo='Aaaaaa' />
+                </div>
+                <div style={styles.Conjunto3}>
+                    <TextoComum textoTitulo='Situação:' />
+                    <TextoMultiplo textoMultiplo='Aaaaaa' />
+                </div>
+                <div style={styles.Conjunto3}>
+                    <TextoComum textoTitulo='Trauma:' />
+                    <TextoMultiplo textoMultiplo='Aaaaaa' />
+                </div>
+                <div style={styles.Conjunto3}>
+                    <TextoComum textoTitulo='Cuidado:' />
+                    <TextoMultiplo textoMultiplo='Aaaaaa' />
+                </div>
+                <div style={styles.Conjunto4}>
+                    {select.TB_ANIMAL_CASTRADO == 'SIM' &&
+                        <TextoOpcional textosOpcionais='Castrado(a)' />}
+                    {select.TB_ANIMAL_VERMIFUGADO == 'SIM' &&
+                        <TextoOpcional textosOpcionais='Vermifugado(a)' />}
+                    {select.TB_ANIMAL_MICROCHIP == 'SIM' &&
+                        <TextoOpcional textosOpcionais='Microchipado(a)' />}
+                </div>
+                <div style={styles.GroupBox} className="groupBox">
+                    <p style={styles.Titulo}>Descrição</p>
+                    <TextoMenor textoDescricao={select.TB_ANIMAL_DESCRICAO} />
+                    <TextoMenor textoTitulo='Cor(es):' textoDescricao='dhgfdyfgdfgdifgdfgdfgdufgd' />
+                    <TextoMenor textoTitulo='Local do resgate:' textoDescricao={select.TB_ANIMAL_LOCAL_RESGATE} />
+                </div>
+                <div style={styles.GroupBox} className="groupBox">
+                    <p style={styles.Titulo}>Localização</p>
+                    <div style={styles.GroupBox2}>
+                        <p style={styles.TextoClaro}>{select.TB_ANIMAL_LOCALIZACAO_CIDADE}</p>
+                        <p style={styles.TextoEscuro}>{select.TB_ANIMAL_LOCALIZACAO_UF}</p>
+                    </div>
+                    <div style={styles.GroupBox2}>
+                        <p style={styles.TextoClaro}>{select.TB_ANIMAL_LOCALIZACAO_BAIRRO},</p>
+                    </div>
+                    <div style={styles.GroupBox2}>
+                        <p style={styles.TextoClaro}>{select.TB_ANIMAL_LOCALIZACAO_RUA}</p>
+                    </div>
+                </div>
+                <div style={styles.ConjuntoBotao}>
+                    <BotaoCadastrar />
+                </div>
             </div>
-            <TextoComum textoTitulo='2' textoDescricao='Ano(s)' />
         </div>
-        <div style={styles.Conjunto3}>
-            <TextoComum textoTitulo='Temperamento:' />
-            <TextoMultiplo textoMultiplo='Aaaaaa' />
-        </div>
-        <div style={styles.Conjunto3}>
-            <TextoComum textoTitulo='Situação:' />
-            <TextoMultiplo textoMultiplo='Aaaaaa' />
-        </div>
-        <div style={styles.Conjunto3}>
-            <TextoComum textoTitulo='Trauma:' />
-            <TextoMultiplo textoMultiplo='Aaaaaa' />
-        </div>
-        <div style={styles.Conjunto3}>
-            <TextoComum textoTitulo='Cuidado:' />
-            <TextoMultiplo textoMultiplo='Aaaaaa' />
-        </div>
-        <div style={styles.Conjunto4}>
-            <TextoOpcional textosOpcionais='Castrado(a)' />
-            <TextoOpcional textosOpcionais='Vermifugado(a)' />
-            <TextoOpcional textosOpcionais='Microchipado(a)' />
-        </div>
-        <div style={styles.GroupBox} className="groupBox">
-            <p style={styles.Titulo}>Descrição</p>
-            <TextoMenor textoDescricao='Duis sed lacinia nisi, nec condimentum tellus. Mauris bibendum orci at malesuada tincidunt. Vivamus id finibus augue, non hendrerit risus. Etiam in nunc egestas, sagittis ex ac, dictum ex. Curabitur et pulvinar augue. Mauris nec porttitor felis. Aliquam in eros sed nunc pellentesque posuere...' />
-            <TextoMenor textoTitulo='Cor(es):' textoDescricao='dhgfdyfgdfgdifgdfgdfgdufgd' />
-            <TextoMenor textoTitulo='Local do resgate:' textoDescricao='Médio' />
-        </div>
-        <div style={styles.GroupBox} className="groupBox">
-            <p style={styles.Titulo}>Localização</p>
-            <div style={styles.GroupBox2}>
-                <p style={styles.TextoClaro}>São Miguel do Gostoso</p>
-                <p style={styles.TextoEscuro}>SP</p>
-            </div>
-            <div style={styles.GroupBox2}>
-                <p style={styles.TextoClaro}>São Miguel do Gostoso</p>
-                <p style={styles.TextoEscuro}>,</p>
-                <p style={styles.TextoClaro}>São Miguel do Gostosok,k,k,j</p>
-            </div>
-        </div>
-        <div style={styles.ConjuntoBotao}>
-            <BotaoCadastrar />
-        </div>
-    </div>
-</div>
-  )
+    )
 }
 
-
 const styles = ({
-    Container: {
+    ContainerMain: {
         width: '100%',
-        flex: 1,
         backgroundColor: corFundo,
+    },
+    Container: {
+        width: '90%',
+        margin: 'auto'
     },
     Conjunto1: {
         justifyContent: "space-between",
@@ -105,7 +144,7 @@ const styles = ({
     },
     Conjunto4: {
         marginTop: 2,
-        justifyContent: "space-between",
+        justifyContent: "space-around",
         flexDirection: "row",
         display: 'flex',
         alignItems: "center",
@@ -115,7 +154,6 @@ const styles = ({
         flexWrap: "wrap"
     },
     GroupBox: {
-        margin: '2%',
         padding: 10,
         borderRadius: 10,
         margin: 20,
@@ -132,7 +170,6 @@ const styles = ({
         paddingLeft: 10,
         paddingRight: 10,
         backgroundColor: corFundo,
-
     },
     Barras: {
         flex: 0.5,
@@ -143,8 +180,15 @@ const styles = ({
         justifyContent: 'center',
         flexDirection: "row",
     },
+    ImgContainer: {
+        width: '100%',
+        height: 400,
+        display: 'flex',
+        justifyContent: 'center',
+        alignItems: 'center',
+    },
     Imagem: {
-        width: '100%'
+        height: '100%'
     },
     GroupBox2: {
         margin: '1%',
@@ -165,9 +209,9 @@ const styles = ({
         paddingRight: 5
     },
     ConjuntoBotao: {
-        justifyContent: "space-between",
-        flexDirection: "row",
         display: 'flex',
+        justifyContent: "center",
+        flexDirection: "row",
         alignItems: "center",
     }
 

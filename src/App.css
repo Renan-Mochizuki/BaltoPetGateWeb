@@ -17,10 +17,23 @@ button, input{
   border: solid 2px #CE7272;
 }
 
-.Barras{
-  border-left: solid 2px #CE7272;
-  border-right: solid 2px #CE7272;
+.select{
+  border: transparent;
+  font-size: 17px;
 }
+.Botoes{
+  border-radius: 20px;
+}
+.escolhaImg{
+  background-color: #fafafa;
+  /* border: solid 2px #CE7272; */
+  border-radius: 20px;
+  padding-left: 10px;
+  padding-right: 10px;
+  padding-top: 8px;
+  padding-bottom: 8px;
+}
+
 .profileImg{
   width: 100px; 
   height: 100px; 

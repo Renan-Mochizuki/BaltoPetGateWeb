@@ -1,10 +1,10 @@
 const Campo = (props) => {
-  return (
+    return (
         <div>
-            <input onChange={text => props.set(text.target.value)}  style={style.campo} {...props} />
+            <input onChange={text => props.set(text.target.value)} style={style.campo} placeholder={props.placeholder} type={props.type} />
             {props.opcional ? <></> : <p style={style.asterisco}>*</p>}
         </div>
-  )
+    )
 }
 const style = ({
     campo: {
@@ -12,7 +12,7 @@ const style = ({
         fontSize: 18,
         paddingLeft: 10,
         paddingRight: 10,
-
+        width: '60%'
     },
     asterisco: {
         position: 'absolute',

@@ -1,7 +1,6 @@
 import axios from "axios";
 import { useEffect, useState } from "react";
-import { urlAPI, urlLocal } from "../constants";
-import ConverterImg from "../utils/ConverterImg";
+import { urlAPI } from "../constants";
 
 const Temporario = () => {
     const [pessoas, setPessoas] = useState([]);

@@ -5,7 +5,7 @@ const CampoSimples = (props) => {
     return (
         <div style={style.containercampo}>
             <div style={style.caixacampo}>
-                <input onChange={(text) => props.set(text.target.value)} style={style.campo} value={props.val} {...props} />
+                <input onChange={(text) => props.set(text.target.value)} style={style.campo} value={props.val} placeholder={props.placeholder} type={props.type} />
                 {!props.opcional && <p style={style.asterisco}>*</p>}
             </div>
         </div>

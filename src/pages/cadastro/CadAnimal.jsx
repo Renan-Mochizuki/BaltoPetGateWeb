@@ -51,40 +51,40 @@ const CadAnimal = () => {
         // TB_PESSOA_IDD = decodedToken.TB_PESSOA_IDD;
     }
 
-    const ListarOpcoes = async () =>{
-        axios.get(urlAPI +'selsituacao')
-        .then(response => {
-            const dados = response.data;
-            const options = dados.map(item => ({
-                label: item.TB_SITUACAO_DESCRICAO,
-                value: item.TB_SITUACAO_ID,
-            }));
-            setSituacoes(options)
-        }).catch(error => {
-            console.error(error)
-        });
-        axios.get(urlAPI +'seltrauma')
-        .then(response => {
-            const dados = response.data;
-            const options = dados.map(item => ({
-                label: item.TB_TRAUMA_DESCRICAO,
-                value: item.TB_TRAUMA_ID,
-            }));
-            setTraumas(options)
-        }).catch(error => {
-            console.error(error)
-        });
-        axios.get(urlAPI +'seltemperamento')
-        .then(response => {
-            const dados = response.data;
-            const options = dados.map(item => ({
-                label: item.TB_TEMPERAMENTO_TIPO,
-                value: item.TB_TEMPERAMENTO_ID,
-            }));
-            setTemperamentos(options)
-        }).catch(error => {
-            console.error(error)
-        });
+    const ListarOpcoes = async () => {
+        axios.get(urlAPI + 'selsituacao')
+            .then(response => {
+                const dados = response.data;
+                const options = dados.map(item => ({
+                    label: item.TB_SITUACAO_DESCRICAO,
+                    value: item.TB_SITUACAO_ID,
+                }));
+                setSituacoes(options)
+            }).catch(error => {
+                console.error(error)
+            });
+        axios.get(urlAPI + 'seltrauma')
+            .then(response => {
+                const dados = response.data;
+                const options = dados.map(item => ({
+                    label: item.TB_TRAUMA_DESCRICAO,
+                    value: item.TB_TRAUMA_ID,
+                }));
+                setTraumas(options)
+            }).catch(error => {
+                console.error(error)
+            });
+        axios.get(urlAPI + 'seltemperamento')
+            .then(response => {
+                const dados = response.data;
+                const options = dados.map(item => ({
+                    label: item.TB_TEMPERAMENTO_TIPO,
+                    value: item.TB_TEMPERAMENTO_ID,
+                }));
+                setTemperamentos(options)
+            }).catch(error => {
+                console.error(error)
+            });
     }
 
     useEffect(() => {
@@ -130,102 +130,102 @@ const CadAnimal = () => {
 
     const Enviar = async () => {
         if (!image) {
-          return console.error('Nenhuma imagem selecionada.');
-    
+            return console.error('Nenhuma imagem selecionada.');
+
         }
         const formData = new FormData();
         formData.append('image', image);
         await axios.put(urlAPI + 'upload', formData)
-          .then(response => {
-            console.log(response.data); 
-            setMessage(response.data)   
-          }).catch(error => {   
-            console.error(error);   
-            setMessage(error)  
-          })  
-        }    
+            .then(response => {
+                console.log(response.data);
+                setMessage(response.data)
+            }).catch(error => {
+                console.error(error);
+                setMessage(error)
+            })
+    }
 
-      const handleImageChange = (e) => {
+    const handleImageChange = (e) => {
         const selectedImage = e.target.files[0];
-    
+
         if (selectedImage) {
-          setImage(URL.createObjectURL(selectedImage));
-          setMessage('');
+            setImage(URL.createObjectURL(selectedImage));
+            setMessage('');
         } else {
-          setImage(null);
-          setMessage('Nenhuma imagem selecionada');
+            setImage(null);
+            setMessage('Nenhuma imagem selecionada');
         }
-      };
+    };
 
     return (
         <ContainerCadastro>
             {carregando ? <p>Carregando</p> :
-            <>
-            <GroupBox titulo='Insira uma imagem do animal'>
-                <form style={style.form}>
-                {image && <img src={image} alt='Imagem do animal' />}
-                    <input style={style.Img} type='file' id='image' onChange={handleImageChange} /> <br />
-                    <label style={style.Label} className="escolhaImg" for="image">Escolha um arquivo</label>
-                </form>
-                {message && <p>{message}</p>}
-            </GroupBox>
-            <GroupBox titulo='Informações'>
-                <CampoSimples placeholder="Nome do animal" set={setNome} />
+                <>
+                    <GroupBox titulo='Insira uma imagem do animal'>
+                        <form style={style.form}>
+                            {image && <img src={image} alt='Imagem do animal' />}
+                            <input style={style.Img} type='file' id='image' onChange={handleImageChange} />
+                            <label style={style.Label} className="escolhaImg" htmlFor="image">Escolha um arquivo</label>
+                        </form>
+                        {message && <p>{message}</p>}
+                    </GroupBox>
+                    <GroupBox titulo='Informações'>
+                        <CampoSimples placeholder="Nome do animal" set={setNome} />
 
-                <div style={style.containerCampos}>
-                    <Campo placeholder="Idade" type="numeric" set={setIdade} />
-                    <Dropdown options={['Meses', 'Anos']} set={setIdadeTipo} texto='Ano(s) ou Mes(es)' />
-                </div>
-                <div style={style.ContainerDublo}>
-                    <div style={style.campo}>
-                        <p style={style.Texto}>Porte:</p>
-                        <Dropdown options={['Pequeno', 'Médio', 'Grande']}  texto='Porte' set={setPorte} />
-                    </div>
-                    <div style={style.campo}>
-                        <Campo placeholder="Peso" type="numeric" set={setPeso}/>
-                        <p style={style.Texto}>Kg</p>
-                    </div>
-                </div>
-                <div style={style.containerCampos}>
-                    <Dropdown options={['Cachorro', 'Gato']} texto='Especie' set={setEspecie} /> 
-                    <Dropdown options={['Macho', 'Fêmea']} texto='Sexo' set={setSexo} /> 
-                </div>
-            </GroupBox>
+                        <div style={style.containerCampos}>
+                            <Campo placeholder="Idade" type="numeric" set={setIdade} />
+                            <Dropdown options={['Meses', 'Anos']} set={setIdadeTipo} texto='Ano(s) ou Mes(es)' />
+                        </div>
+                        <div style={style.ContainerDublo}>
+                            <div style={style.campo}>
+                                <p style={style.Texto}>Porte:</p>
+                                <Dropdown options={['Pequeno', 'Médio', 'Grande']} texto='Porte' set={setPorte} />
+                            </div>
+                            <div style={style.campo}>
+                                <Campo placeholder="Peso" type="numeric" set={setPeso} />
+                                <p style={style.Texto}>Kg</p>
+                            </div>
+                        </div>
+                        <div style={style.containerCampos}>
+                            <Dropdown options={['Cachorro', 'Gato']} texto='Especie' set={setEspecie} />
+                            <Dropdown options={['Macho', 'Fêmea']} texto='Sexo' set={setSexo} />
+                        </div>
+                    </GroupBox>
 
-            <GroupBox titulo='Descrição'>
-                <CampoSimples placeholder="Minha historia" set={setDescricao} />
-                <CampoSimples placeholder="Local do resgate" set={setLocalResgate} />
-                <CampoSimples placeholder="Cuidados necessarios com o pet" set={setCuidadoEspecial} />
-            </GroupBox>
-            <GroupBox titulo='Saúde'>
-                <RadioButton options={['Saudável', 'Doente']}  set={setSaude}/>
-            </GroupBox>
-            <GroupBox titulo='Castrado'>
-                <RadioButton options={['Sim', 'Não']} set={setCastrado} />
-            </GroupBox>
-            <GroupBox titulo='Vermifugado'>
-                <RadioButton options={['Sim', 'Não']} set={setVermifugado} />
-            </GroupBox>
-            <GroupBox titulo='Microchipado'>
-                <RadioButton options={['Sim', 'Não']} set={setMicrochip} />
-            </GroupBox>
-            <GroupBox titulo='Temperamento'>
-                <CampoOpcoes dados={temperamentos}/>
-            </GroupBox>
-            <GroupBox titulo='Situação'>
-                <CampoOpcoes dados={situacoes}/>
-            </GroupBox>
-            <GroupBox titulo='Traumas (opcional)'>
-                <CampoOpcoes dados={traumas}/>
-            </GroupBox>
-            <GroupBox titulo='Localização'>
-                <CampoEndereco set2={setUf} set3={setCidade} set4={setBairro} set5={setRua} />
-            </GroupBox>
-            {/* <CheckBoxComponent texto='Animal em estado de alerta' set={setAlerta} /> */}
-            <BotaoCadastrar onClick={Cadastrar} texto='Cadastrar' />
-            </>
+                    <GroupBox titulo='Descrição'>
+                        <CampoSimples placeholder="Minha historia" set={setDescricao} />
+                        <CampoSimples placeholder="Local do resgate" set={setLocalResgate} />
+                        <CampoSimples placeholder="Cuidados necessarios com o pet" set={setCuidadoEspecial} />
+                    </GroupBox>
+                    <GroupBox titulo='Saúde'>
+                        <RadioButton options={['Saudável', 'Doente']} set={setSaude} />
+                    </GroupBox>
+                    <GroupBox titulo='Castrado'>
+                        <RadioButton options={['Sim', 'Não']} set={setCastrado} />
+                    </GroupBox>
+                    <GroupBox titulo='Vermifugado'>
+                        <RadioButton options={['Sim', 'Não']} set={setVermifugado} />
+                    </GroupBox>
+                    <GroupBox titulo='Microchipado'>
+                        <RadioButton options={['Sim', 'Não']} set={setMicrochip} />
+                    </GroupBox>
+                    <GroupBox titulo='Temperamento'>
+                        <CampoOpcoes dados={temperamentos} />
+                    </GroupBox>
+                    <GroupBox titulo='Situação'>
+                        <CampoOpcoes dados={situacoes} />
+                    </GroupBox>
+                    <GroupBox titulo='Traumas (opcional)'>
+                        <CampoOpcoes dados={traumas} />
+                    </GroupBox>
+                    <GroupBox titulo='Localização'>
+                        <CampoEndereco set2={setUf} set3={setCidade} set4={setBairro} set5={setRua} />
+                    </GroupBox>
+                    {/* <CheckBoxComponent texto='Animal em estado de alerta' set={setAlerta} /> */}
+                    <BotaoCadastrar onClick={Cadastrar} texto='Cadastrar' />
+                </>
             }
-            </ContainerCadastro>
+        </ContainerCadastro>
     )
 }
 const style = ({
@@ -274,11 +274,11 @@ const style = ({
     Img: {
         display: 'none',
     },
-    Label:{
+    Label: {
         color: '#447837',
         fontSize: 18
     },
-    form:{
+    form: {
         padding: 14,
         display: 'flex',
         flexDirection: "column",
@@ -286,10 +286,10 @@ const style = ({
         alignItems: 'center',
         marginTop: 5
     },
-    BotaoImg:{
+    BotaoImg: {
         marginTop: 10,
         backgroundColor: corBotaoCad,
-        color:'#fff',
+        color: '#fff',
         alignItems: 'center',
         justifyContent: 'center',
         display: 'flex',
