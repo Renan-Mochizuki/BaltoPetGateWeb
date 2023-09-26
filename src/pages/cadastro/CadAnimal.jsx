@@ -4,11 +4,12 @@ import Campo from "../../components/cadastro/Campo"
 import BotaoCadastrar from "../../components/cadastro/BotaoCadastrar"
 import ContainerCadastro from "../../components/cadastro/ContainerCadastro"
 import { useEffect, useState } from "react"
-import { urlAPI } from "../../constants"
+import { corBotaoCad, urlAPI } from "../../constants"
+import Dropdown from "../../components/cadastro/DropDown"
 import axios from "axios"
+import CampoOpcoes from "../../components/cadastro/CampoOpcoes"
 import DecodificarToken from "../../utils/DecodificarToken"
-import RadioButton2 from "../../components/cadastro/RadioButton2"
-import RadioButton3 from "../../components/cadastro/RadioButton3"
+import RadioButton from "../../components/cadastro/RadioButton"
 import CampoEndereco from "../../components/cadastro/CampoEndereco"
 
 let TB_PESSOA_IDD;
@@ -35,37 +36,64 @@ const CadAnimal = () => {
     const [rua, setRua] = useState('');
     const [alerta, setAlerta] = useState(false);
 
+    const [situacoes, setSituacoes] = useState([]);
+    const [traumas, setTraumas] = useState([]);
+    const [temperamentos, setTemperamentos] = useState([]);
+
+    const [carregando, setCarregando] = useState(true);
+
     const Cadastrar = () => {
         InserirDados();
     }
 
-
     const PegarId = async () => {
-        const decodedToken = await DecodificarToken();
-        TB_PESSOA_IDD = decodedToken.TB_PESSOA_IDD;
+        // const decodedToken = await DecodificarToken();
+        // TB_PESSOA_IDD = decodedToken.TB_PESSOA_IDD;
+    }
+
+    const ListarOpcoes = async () =>{
+        axios.get(urlAPI +'selsituacao')
+        .then(response => {
+            const dados = response.data;
+            const options = dados.map(item => ({
+                label: item.TB_SITUACAO_DESCRICAO,
+                value: item.TB_SITUACAO_ID,
+            }));
+            setSituacoes(options)
+        }).catch(error => {
+            console.error(error)
+        });
+        axios.get(urlAPI +'seltrauma')
+        .then(response => {
+            const dados = response.data;
+            const options = dados.map(item => ({
+                label: item.TB_TRAUMA_DESCRICAO,
+                value: item.TB_TRAUMA_ID,
+            }));
+            setTraumas(options)
+        }).catch(error => {
+            console.error(error)
+        });
+        axios.get(urlAPI +'seltemperamento')
+        .then(response => {
+            const dados = response.data;
+            const options = dados.map(item => ({
+                label: item.TB_TEMPERAMENTO_TIPO,
+                value: item.TB_TEMPERAMENTO_ID,
+            }));
+            setTemperamentos(options)
+        }).catch(error => {
+            console.error(error)
+        });
     }
 
     useEffect(() => {
-        PegarId();
+        PegarId().then(() => {
+            ListarOpcoes().then(() => {
+                setCarregando(false);
+            })
+        })
     }, []);
-
-    const TipoIdade = [
-        { label: 'Ano(s)', value: 'ANO' },
-        { label: 'Mes(es)', value: 'MES' }
-    ];
-    const Porte = [
-        { label: 'Pequeno', value: 'PEQUENO' },
-        { label: 'Médio', value: 'MEDIO' },
-        { label: 'Grande', value: 'GRANDE' }
-    ];
-    const Especie = [
-        { label: 'Cachorro', value: 'CACHORRO' },
-        { label: 'Gato', value: 'GATO' }
-    ];
-    const Sexo = [
-        { label: 'Fêmea', value: 'FEMEA' },
-        { label: 'Macho', value: 'MACHO' }
-    ];
 
     const InserirDados = async () => {
         try {
@@ -97,28 +125,70 @@ const CadAnimal = () => {
         }
     };
 
+    const [image, setImage] = useState(null);
+    const [message, setMessage] = useState('');
+
+    const Enviar = async () => {
+        if (!image) {
+          return console.error('Nenhuma imagem selecionada.');
+    
+        }
+        const formData = new FormData();
+        formData.append('image', image);
+        await axios.put(urlAPI + 'upload', formData)
+          .then(response => {
+            console.log(response.data); 
+            setMessage(response.data)   
+          }).catch(error => {   
+            console.error(error);   
+            setMessage(error)  
+          })  
+        }    
+
+      const handleImageChange = (e) => {
+        const selectedImage = e.target.files[0];
+    
+        if (selectedImage) {
+          setImage(URL.createObjectURL(selectedImage));
+          setMessage('');
+        } else {
+          setImage(null);
+          setMessage('Nenhuma imagem selecionada');
+        }
+      };
 
     return (
         <ContainerCadastro>
+            {carregando ? <p>Carregando</p> :
+            <>
+            <GroupBox titulo='Insira uma imagem do animal'>
+                <form style={style.form}>
+                {image && <img src={image} alt='Imagem do animal' />}
+                    <input style={style.Img} type='file' id='image' onChange={handleImageChange} /> <br />
+                    <label style={style.Label} className="escolhaImg" for="image">Escolha um arquivo</label>
+                </form>
+                {message && <p>{message}</p>}
+            </GroupBox>
             <GroupBox titulo='Informações'>
                 <CampoSimples placeholder="Nome do animal" set={setNome} />
 
                 <div style={style.containerCampos}>
-                    <Campo placeholder="Idade" keyboardType="numeric" set={setIdade} />
-                    {/* <DropdownSimples data={TipoIdade} set={setIdadeTipo} texto='Ano(s) ou Mes(es)' /> */}
+                    <Campo placeholder="Idade" type="numeric" set={setIdade} />
+                    <Dropdown options={['Meses', 'Anos']} set={setIdadeTipo} texto='Ano(s) ou Mes(es)' />
                 </div>
                 <div style={style.ContainerDublo}>
                     <div style={style.campo}>
-                        {/* <DropdownSimples data={Porte} texto='Porte' set={setPorte} /> */}
+                        <p style={style.Texto}>Porte:</p>
+                        <Dropdown options={['Pequeno', 'Médio', 'Grande']}  texto='Porte' set={setPorte} />
                     </div>
                     <div style={style.campo}>
-                        <Campo placeholder="Peso" keyboardType="numeric" set={setPeso} />
+                        <Campo placeholder="Peso" type="numeric" set={setPeso}/>
                         <p style={style.Texto}>Kg</p>
                     </div>
                 </div>
                 <div style={style.containerCampos}>
-                    {/* <DropdownSimples data={Especie} texto='Especie' set={setEspecie} /> */}
-                    {/* <DropdownSimples data={Sexo} texto='Sexo' set={setSexo} /> */}
+                    <Dropdown options={['Cachorro', 'Gato']} texto='Especie' set={setEspecie} /> 
+                    <Dropdown options={['Macho', 'Fêmea']} texto='Sexo' set={setSexo} /> 
                 </div>
             </GroupBox>
 
@@ -127,24 +197,35 @@ const CadAnimal = () => {
                 <CampoSimples placeholder="Local do resgate" set={setLocalResgate} />
                 <CampoSimples placeholder="Cuidados necessarios com o pet" set={setCuidadoEspecial} />
             </GroupBox>
-            {/* <GroupBox titulo='Saúde'>
-                <RadioButton2 set={setSaude} />
+            <GroupBox titulo='Saúde'>
+                <RadioButton options={['Saudável', 'Doente']}  set={setSaude}/>
             </GroupBox>
             <GroupBox titulo='Castrado'>
-                <RadioButton3 set={setCastrado} />
+                <RadioButton options={['Sim', 'Não']} set={setCastrado} />
             </GroupBox>
             <GroupBox titulo='Vermifugado'>
-                <RadioButton3 set={setVermifugado} />
+                <RadioButton options={['Sim', 'Não']} set={setVermifugado} />
             </GroupBox>
             <GroupBox titulo='Microchipado'>
-                <RadioButton3 set={setMicrochip} />
-            </GroupBox> */}
+                <RadioButton options={['Sim', 'Não']} set={setMicrochip} />
+            </GroupBox>
+            <GroupBox titulo='Temperamento'>
+                <CampoOpcoes dados={temperamentos}/>
+            </GroupBox>
+            <GroupBox titulo='Situação'>
+                <CampoOpcoes dados={situacoes}/>
+            </GroupBox>
+            <GroupBox titulo='Traumas (opcional)'>
+                <CampoOpcoes dados={traumas}/>
+            </GroupBox>
             <GroupBox titulo='Localização'>
                 <CampoEndereco set2={setUf} set3={setCidade} set4={setBairro} set5={setRua} />
             </GroupBox>
             {/* <CheckBoxComponent texto='Animal em estado de alerta' set={setAlerta} /> */}
-            <BotaoCadastrar onPress={Cadastrar} texto='Cadastrar' />
-        </ContainerCadastro>
+            <BotaoCadastrar onClick={Cadastrar} texto='Cadastrar' />
+            </>
+            }
+            </ContainerCadastro>
     )
 }
 const style = ({
@@ -153,7 +234,7 @@ const style = ({
         alignItems: 'center',
         justifyContent: 'center',
         width: '100%',
-        height: '100%',
+        // height: '100%',
     },
     campo: {
         width: '46%',
@@ -165,26 +246,56 @@ const style = ({
         flexDirection: "row",
         alignItems: "center",
         marginVertical: 5,
+        justifyContent: "space-evenly",
+        display: "flex",
 
     },
     containerCampos: {
         width: '95%',
-        justifyContent: "space-between",
+        justifyContent: "space-evenly",
         flexDirection: "row",
         backgroundColor: '#fff',
         borderRadius: 15,
-        alignItems: "center"
+        alignItems: "center",
+        display: "flex",
     },
     ContainerDublo: {
         width: '95%',
         display: "flex",
         flexDirection: "row",
-        justifyContent: "space-between"
+        justifyContent: "space-between",
+        marginTop: 5,
+        marginBottom: 5,
     },
     Texto: {
         color: '#447837',
-        left: 20,
         fontSize: 18
     },
+    Img: {
+        display: 'none',
+    },
+    Label:{
+        color: '#447837',
+        fontSize: 18
+    },
+    form:{
+        padding: 14,
+        display: 'flex',
+        flexDirection: "column",
+        justifyContent: "center",
+        alignItems: 'center',
+        marginTop: 5
+    },
+    BotaoImg:{
+        marginTop: 10,
+        backgroundColor: corBotaoCad,
+        color:'#fff',
+        alignItems: 'center',
+        justifyContent: 'center',
+        display: 'flex',
+        width: '100%',
+        fontSize: 16,
+        padding: 12,
+    }
 });
 export default CadAnimal

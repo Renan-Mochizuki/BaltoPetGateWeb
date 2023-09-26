@@ -16,6 +16,11 @@ button, input{
 .groupBox{
   border: solid 2px #CE7272;
 }
+
+.Barras{
+  border-left: solid 2px #CE7272;
+  border-right: solid 2px #CE7272;
+}
 .profileImg{
   width: 100px; 
   height: 100px; 
