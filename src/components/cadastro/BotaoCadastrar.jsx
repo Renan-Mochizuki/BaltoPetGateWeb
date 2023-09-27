@@ -1,6 +1,6 @@
 const BotaoCadastrar = (props) => {
     return (
-        <button style={styles.botaocadastro} {...props}>
+        <button style={styles.botaocadastro} className="botaoCadastro" {...props}>
             {props.texto ? props.texto : 'Cadastrar'}
         </button>
     )

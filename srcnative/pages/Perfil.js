@@ -146,6 +146,7 @@ const styles = StyleSheet.create({
     top: 270,
     backgroundColor: '#CEF7FF',
     shadowColor: '#519546',
+    flexGrow: 1
   },
   header: {
     padding: 20,

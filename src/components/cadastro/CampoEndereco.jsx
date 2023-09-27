@@ -1,6 +1,7 @@
 import { useState, useEffect } from "react";
 import axios from "axios";
 import { corBotaoCad, corDicaCad, corFundoCampoCad, corTextoBotaoCad, valorBordaCampoCad } from "../../constants";
+import CampoSimples from "./CampoSimples";
 
 let opcional;
 
@@ -109,79 +110,42 @@ const CampoEndereco = (props) => {
         if (props.set1 && props.val1) {
             formatarTextoCampo(props.val1)
         }
-        setUf(props.val2);
-        ListarCidades(props.val2);
-        setCidade(props.val3);
-        setBairro(props.val4);
-        setRua(props.val5);
+        setUf(props.val2 || '');
+        ListarCidades(props.val2 || '');
+        setCidade(props.val3 || '');
+        setBairro(props.val4 || '');
+        setRua(props.val5 || '');
     }, [])
+
 
     return (
         <div style={style.containercampo}>
             {opcional && <p style={style.titulocampo}>Localização (Opcional):</p>}
             <div>
-                <input onChange={text => formatarTextoCampo(text.target.value)} value={texto} maxLength={9} placeholder={opcional ? "CEP (Opcional)" : "CEP"} onFocus={() => setTextoDica(true)} onBlur={() => setTextoDica(false)} type='numeric' style={style.campo} />
-                {!opcional && <p style={style.asterisco}>*</p>}
+                <CampoSimples set={formatarTextoCampo} val={texto} maxLength={9} placeholder={opcional ? "CEP (Opcional)" : "CEP"} onFocus={() => setTextoDica(true)} onBlur={() => setTextoDica(false)} type='numeric' />
             </div>
             {textoDica && <p style={style.dica}>Insira apenas números</p>}
-            <button onClick={() => BuscarEndereco(cep)} style={style.botaopesquisar}>
+            <button onClick={() => BuscarEndereco(cep)} className="botaoCadastro" style={style.botaopesquisar}>
                 <p style={style.textocadastro}>Pesquisar CEP</p>
             </button>
-            <div style={style.selecionar}>
-                {/* <Dropdown
-                    style={[style.dropdown, { width: !opcional ? '96%' : '100%' }]}
-                    placeholderStyle={{ color: corPlaceholderCad, fontSize: 18, }}
-                    selectedTextStyle={{ fontSize: 18, }}
-                    inputSearchStyle={{ height: 40, fontSize: 18, }}
-                    data={ufs}
-                    maxHeight={300}
-                    labelField="label"
-                    valueField="value"
-                    placeholder={'Selecione o UF'}
-                    value={uf}
-                    onChange={item => {
-                        setUf(item.value);
-                        props.set2(item.value);
-                        ListarCidades(item.value)
-                    }}
-                /> */}
-                {!opcional && <p style={style.asteriscoDropdown}>*</p>}
-            </div>
-            <div style={style.selecionar}>
-                {/* <Dropdown
-                    style={[style.dropdown, { width: !opcional ? '96%' : '100%' }]}
-                    placeholderStyle={{ color: corPlaceholderCad, fontSize: 18, }}
-                    selectedTextStyle={{ fontSize: 18, }}
-                    inputSearchStyle={{ height: 40, fontSize: 18, }}
-                    data={uf ? cidades : [{ label: 'Selecione o UF primeiro', value: 'Selecione o UF primeiro' }]}
-                    search={uf ? true : false}
-                    maxHeight={300}
-                    labelField="label"
-                    valueField="value"
-                    placeholder={'Selecione a cidade'}
-                    searchPlaceholder="Pesquisar"
-                    value={cidade}
-                    onChange={item => {
-                        setCidade(item.value);
-                        props.set3(item.value);
-                    }}
-                /> */}
-                {!opcional && <p style={style.asteriscoDropdown}>*</p>}
+            <div style={style.subcontainer}>
+                <CampoSimples placeholder='UF' set={props.set2} val={uf} />
             </div>
             <div>
-                <input onChange={text => { setBairro(text.target.value); props.set4(text.target.value) }} value={bairro} placeholder={"Bairro"} style={style.campo} />
-                {!opcional && <p style={style.asterisco}>*</p>}
+                <CampoSimples placeholder='Cidade' set={props.set3} val={cidade} />
             </div>
             <div>
-                <input onChange={text => { setRua(text.target.value); props.set5(text.target.value) }} value={rua} placeholder={"Rua"} style={style.campo} />
-                {!opcional && <p style={style.asterisco}>*</p>}
+                <CampoSimples placeholder='Bairro' set={props.set4} val={bairro} />
+            </div>
+            <div>
+                <CampoSimples placeholder='Rua' set={props.set5} val={rua} />
             </div>
             {props.set1 && <>
                 <div>
-                    <input onChange={text => props.set6(text.target.value)} value={props.val6 && props.val6.toString()} placeholder={"Número"} type='numeric' style={style.campo} />
+                    <input onChange={text => props.set6(text.target.value)} placeholder={"Número"} type='numeric' style={style.campo} />
                     {!opcional && <p style={style.asterisco}>*</p>}
                 </div>
-                <input onChange={text => props.set7(text.target.value)} value={props.val7} placeholder={"Complemento"} style={style.campo} />
+                <input onChange={text => props.set7(text.target.value)} placeholder={"Complemento"} style={style.campo} />
             </>}
 
         </div>
@@ -191,6 +155,10 @@ const CampoEndereco = (props) => {
 const style = ({
     containercampo: {
         width: '95%',
+        color: '#000',
+    },
+    subcontainer: {
+        margin: 'auto'
     },
     titulocampo: {
         fontSize: 18,
@@ -225,7 +193,7 @@ const style = ({
         textAlign: 'center',
     },
     botaopesquisar: {
-        width: '100%',
+        width: '95%',
         height: 30,
         justifyContent: 'center',
         alignItems: 'center',
@@ -239,25 +207,12 @@ const style = ({
         color: corTextoBotaoCad,
         fontSize: 18,
     },
-    dropdown: {
-        height: 40,
-        paddingLeft: 10,
-        paddingRight: 10,
-        fontSize: 18,
-    },
     asterisco: {
         position: 'absolute',
         fontSize: 25,
         color: 'red',
         right: 10,
         bottom: 5,
-    },
-    asteriscoDropdown: {
-        position: 'absolute',
-        fontSize: 25,
-        color: 'red',
-        right: 10,
-        bottom: 1,
     },
 });
 

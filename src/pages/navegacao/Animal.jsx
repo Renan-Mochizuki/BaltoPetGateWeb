@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
 import DecodificarToken from "../../utils/DecodificarToken";
 import axios from "axios";
-import { urlAPI, urlLocal } from "../../constants";
+import { corFundo, corHeaderCard, corMaiorAnimal, corNomeExibirAnimal, urlAPI, urlLocal } from "../../constants";
 
 const Animal = () => {
     const [autorizado, setAutorizado] = useState(false);
@@ -17,7 +17,7 @@ const Animal = () => {
             }
         }
         const ListarAnimais = async () => {
-            axios.get(urlAPI + 'selanimal')
+            axios.get(urlLocal + 'selanimal')
                 .then(response => {
                     setAnimais(response.data);
                 })
@@ -35,20 +35,28 @@ const Animal = () => {
                 <div style={styles.container}>
                     {animais.map((item, index) => (
                         <div key={index} style={styles.card}>
-                            <div style={styles.cardHeader}>
+                            <div style={styles.cardHeader} className="cardHeader">
                                 <div style={styles.cardUser}>
                                     <div className="profileImg">
-                                        <img src="http://via.placeholder/200" alt="Perfil" />
+                                        <img src={urlAPI + 'selpessoaimg/' + item.TB_PESSOA_ID} alt="Perfil" />
                                     </div>
-                                    <p>{item.TB_PESSOA_ID}</p>
+                                    <p>{item.TB_PESSOA.TB_PESSOA_NOME_PERFIL}</p>
                                 </div>
                             </div>
-                            <div className="animalImgContainer">
-                                <img src="http://via.placeholder/500" alt="Imagem do animal" />
-                            </div>
+                            <a href={"/Ficha/" + item.TB_ANIMAL_ID}>
+                                <div className="animalImgContainer">
+                                    <img src={urlAPI + 'selanimalimg/' + item.TB_ANIMAL_ID} alt="Imagem do animal" />
+                                </div>
+                            </a>
                             <div style={styles.cardContent}>
-                                <p>Nome: {item.TB_ANIMAL_NOME} </p>
-                                <br />
+                                <div style={styles.nomeAnimal}>
+                                    <p style={{ color: corMaiorAnimal }}>Nome: &nbsp;</p>
+                                    <p style={{ color: corNomeExibirAnimal }}>{item.TB_ANIMAL_NOME} </p>
+                                </div>
+                                <div style={styles.nomeAnimal}>
+                                    <p style={{ color: corMaiorAnimal }}>Temperamentos: &nbsp;</p>
+                                    <p style={{ color: corNomeExibirAnimal }}>{item.TB_ANIMAL_LOCALIZACAO_CIDADE} </p>
+                                </div>
                             </div>
                         </div>
                     ))}
@@ -65,6 +73,7 @@ const styles = ({
         justifyContent: 'center',
         width: 500,
         minHeight: '100%',
+        margin: 'auto',
     },
     card: {
         width: '100%',
@@ -74,16 +83,30 @@ const styles = ({
         display: "flex",
         flexDirection: 'row',
         justifyContent: 'space-between',
-        height: 60
+        height: 60,
+        backgroundColor: corHeaderCard,
     },
     cardUser: {
         display: 'flex',
         flexDirection: 'row',
-        columnGap: 40,
-        marginLeft: 10,
+        alignItems: 'center',
+        columnGap: 30,
+        marginLeft: 20,
+        paddingTop: 10,
+        paddingBottom: 10,
+        color: '#fff',
+        fontSize: 25
     },
     cardContent: {
-
+        height: 150,
+        backgroundColor: corFundo,
+        paddingTop: 20,
+        paddingLeft: 20,
+        fontSize: 25,
+    },
+    nomeAnimal: {
+        display: 'flex',
+        flexDirection: 'row'
     }
 })
 export default Animal;

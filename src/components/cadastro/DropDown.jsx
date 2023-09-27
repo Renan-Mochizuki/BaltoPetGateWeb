@@ -9,11 +9,11 @@ const Dropdown = (props) => {
   };
 
   return (
-    <div>
+    <div >
       <select
         style={style.opcoes}
         className='select'
-        id="dropdown"
+        id={props.texto}
         value={selectedOption}
         onChange={handleChange}
       >

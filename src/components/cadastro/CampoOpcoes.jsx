@@ -9,9 +9,9 @@ const CampoOpcoes = (props) => {
 
   const escolhida = (e) => {
     setSelected(e)
-    const newArray = e.map(item => item.value);
-
-    props.set(newArray);
+    const array = e.map(item => item.value);
+    const arrayJson = JSON.stringify({ array });
+    props.set(array);
   };
 
   return (

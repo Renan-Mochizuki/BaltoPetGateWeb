@@ -2,12 +2,20 @@ import React, { useState } from 'react';
 import { corBotaoCad } from '../../constants';
 
 const RadioButton = (props) => {
-  const [selectedOption, setSelectedOption] = useState(props.options[0]);
+  const [selectedOption, setSelectedOption] = useState(null);
 
   const handleOptionChange = (event) => {
     setSelectedOption(event.target.value);
-    props.set(event.target.value)
+    let valor = event.target.value;
+    if (valor == 'Doente') {
+      props.set(false)
+    } else if (valor == 'Saudável') {
+      props.set(true)
+    } else {
+      props.set(valor)
+    } 
   };
+
   return (
     <div style={style.Container}>
       {props.options.map((option, index) => (

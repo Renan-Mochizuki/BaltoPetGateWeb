@@ -30,7 +30,7 @@ const Teste = () => {
     const formData = new FormData();
     formData.append('image', image);
 
-    await axios.put('https://apibalto-git-feat-img-renan-mochizuki.vercel.app/altpessoa/9', formData)
+    await axios.put(urlLocal + 'altanimal/12', formData)
       .then(response => {
         console.log(response.data);
         setMessage(response.data.message)

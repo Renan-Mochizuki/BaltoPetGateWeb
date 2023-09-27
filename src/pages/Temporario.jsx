@@ -28,6 +28,8 @@ const Temporario = () => {
             <a href='/CadUsuario'>CadUsuario</a>
             <br />
             <a href='/Ficha/1'>Ficha</a>
+            <br />
+            <a href='/Testes'>Ficha</a>
             <ul>
                 {pessoas.map((item, index) => {
                     const url = urlAPI + "selpessoaimg/" + item.TB_PESSOA_ID;

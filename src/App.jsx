@@ -7,19 +7,21 @@ import CadUsuario from './pages/cadastro/CadUsuario'
 import Ficha from './pages/Ficha'
 import Temporario from './pages/Temporario'
 import Teste from './pages/navegacao/Teste'
+import Testes from './pages/Testes'
 
 function App() {
 
   return (
     <Router>
       <Routes>
-        <Route exact path="/" element={<Temporario />} />
+        <Route exact path="/" element={<Login />} />
         <Route path="/Login" element={<Login />} />
         <Route path="/CadAnimal" element={<CadAnimal />} />
         <Route path="/Animal" element={<Animal />} />
         <Route path="/CadUsuario" element={<CadUsuario />} />
         <Route path="/Ficha/:id" element={<Ficha />} />
         <Route path="/Teste" element={<Teste />} />
+        <Route path="/Testes" element={<Testes />} />
       </Routes>
     </Router>
   )

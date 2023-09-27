@@ -43,7 +43,7 @@ const Ficha = () => {
         <div style={styles.ContainerMain}>
             <div style={styles.Container}>
                 <div style={styles.ImgContainer}>
-                    <img style={styles.Imagem} src="http://via.placeholder.com/200" alt="Imagem do animal" />
+                    <img style={styles.Imagem} src={urlAPI + 'selanimalimg/' + id} alt="Imagem do animal" />
                 </div>
                 <div style={styles.Conjunto1}>
                     <TextoComum textoTitulo='Nome:' textoDescricao={select.TB_ANIMAL_NOME} />
@@ -214,7 +214,6 @@ const styles = ({
         flexDirection: "row",
         alignItems: "center",
     }
-
 });
 
 export default Ficha

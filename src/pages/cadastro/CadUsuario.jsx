@@ -61,7 +61,7 @@ const CadUsuario = () => {
         <CampoSenha set1={setSenha} set2={setSenhaConfirmacao} />
       </GroupBox>
       {mensagem && <p style={{ color: mensagem == 'Cadastrado!' ? '#fff' : 'red' }}>{mensagem}</p>}
-      <BotaoCadastrar onClick={Cadastrar} className="botaoCadastro" />
+      <BotaoCadastrar onClick={Cadastrar} />
     </ContainerCadastro>
   )
 }
