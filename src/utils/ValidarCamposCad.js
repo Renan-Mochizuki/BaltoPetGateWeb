@@ -79,15 +79,15 @@ export default function ValidarCamposCad(camposObrigatorios, dados) {
         // if (facebook && (!criteriosUrl.test(facebook) || !facebook.includes('facebook.com/'))) {
         //     mensagemErro += "Link do facebook inválido.\n";
         // }
-        if (email && !criteriosEmail.test(email)) {
-            mensagemErro += "E-mail inválido.\n";
-        }
-        if (senha && !criteriosSenha.test(senha)) {
-            mensagemErro += "Senha inválida. A senha deve possuir no mínimo 8 caracteres, um número e uma letra maiúscula. \n";
-        }
-        else if (senha !== senhaConfirmacao) {
-            mensagemErro += "As senhas não correspondem.";
-        }
+        // if (email && !criteriosEmail.test(email)) {
+        //     mensagemErro += "E-mail inválido.\n";
+        // }
+        // if (senha && !criteriosSenha.test(senha)) {
+        //     mensagemErro += "Senha inválida. A senha deve possuir no mínimo 8 caracteres, um número e uma letra maiúscula. \n";
+        // }
+        // else if (senha !== senhaConfirmacao) {
+        //     mensagemErro += "As senhas não correspondem.";
+        // }
     }
     return mensagemErro;
 }

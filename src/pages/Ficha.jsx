@@ -7,6 +7,8 @@ import { corFundo, corFundoCad, corFundoCampoCad, corPlaceholderCad, corTextoBot
 import { useParams } from "react-router-dom";
 import { useEffect, useState } from "react"
 import axios from "axios"
+import ContainerCadastro from "../components/cadastro/ContainerCadastro"
+import DecodificarToken from "../utils/DecodificarToken"
 
 const Ficha = () => {
     const { id } = useParams();
@@ -38,9 +40,27 @@ const Ficha = () => {
         })
     };
 
+    const [autorizado, setAutorizado] = useState(false);
+    const [carregando, setCarregando] = useState(true);
+
     useEffect(() => {
-        Selecionar();
-    }, [])
+        const Autorizar = async () => {
+            const decodedToken = await DecodificarToken();
+            if (!decodedToken) {
+                setTimeout(() => {
+                    window.location.replace('/Login');
+                }, 1500);
+            } else {
+                setAutorizado(true);
+            }
+        }
+        const Carregar = async () => {
+            await Autorizar();
+            await Selecionar();
+            setCarregando(false)
+        }
+        Carregar()
+    }, []);
 
     if (select.TB_ANIMAL_IDADE_TIPO == 'MES' && select.TB_ANIMAL_IDADE == 1) {
         tipoIdade = 'Mês'
@@ -53,85 +73,97 @@ const Ficha = () => {
     }
 
     return (
-        <div style={styles.ContainerMain}>
-            <div style={styles.Container}>
-                <div className="imgFicha">
-                    <img src={urlAPI + 'selanimalimg/' + id} alt="Imagem do animal" />
-                </div>
-                <div style={styles.Conjunto1}>
-                    <TextoComum textoTitulo='Nome:' textoDescricao={select.TB_ANIMAL_NOME} />
-                    <TextoComum textoTitulo='Porte:' textoDescricao={select.TB_ANIMAL_PORTE == 'PEQUENO' ? 'Pequeno' : select.TB_ANIMAL_PORTE == 'MEDIO' ? 'Médio' : select.TB_ANIMAL_PORTE == 'GRANDE' ? 'Grande' : select.TB_ANIMAL_PORTE} />
-                </div>
-                <div style={styles.Conjunto2} className="groupBox">
-                    <TextoComum textoTitulo={select.TB_ANIMAL_PESO} textoDescricao='Kg' />
-                    <div style={styles.Barras} className="Barras">
-                        <TextoComum textoDescricao={select.TB_ANIMAL_SEXO == 'MACHO' ? 'Macho' : 'Fêmea'} />
-                    </div>
-                    <TextoComum textoTitulo={select.TB_ANIMAL_IDADE} textoDescricao={tipoIdade} />
-                </div>
-                {temperamentos.length !== 0 &&
-                    <div style={styles.Conjunto3}>
-                        <TextoComum textoTitulo='Temperamento:' />
-                        {temperamentos.map((item, index) => {
-                            return (
-                                <TextoMultiplo textoMultiplo={item.TB_TEMPERAMENTO.TB_TEMPERAMENTO_TIPO} key={index} />
-                            )
-                        })}
-                    </div>}
-                {situacoes.length !== 0 &&
-                    <div style={styles.Conjunto3}>
-                        <TextoComum textoTitulo='Situação:' />
-                        {situacoes.map((item, index) => {
-                            return (
-                                <TextoMultiplo textoMultiplo={item.TB_SITUACAO.TB_SITUACAO_DESCRICAO} key={index} />
-                            )
-                        })}
-                    </div>}
-                {traumas.length !== 0 &&
-                    <div style={styles.Conjunto3}>
-                        <TextoComum textoTitulo='Trauma:' />
-                        {traumas.map((item, index) => {
-                            return (
-                                <TextoMultiplo textoMultiplo={item.TB_TRAUMA.TB_TRAUMA_DESCRICAO} key={index} />
-                            )
-                        })}
-                    </div>}
-                {select.TB_ANIMAL_CUIDADO_ESPECIAL &&
-                    <div style={styles.Conjunto3}>
-                        <TextoComum textoTitulo='Cuidado:' />
-                        <TextoMultiplo textoMultiplo={select.TB_ANIMAL_CUIDADO_ESPECIAL} />
-                    </div>}
-                <div style={styles.Conjunto4}>
-                    {select.TB_ANIMAL_CASTRADO == 'SIM' &&
-                        <TextoOpcional textosOpcionais='Castrado(a)' />}
-                    {select.TB_ANIMAL_VERMIFUGADO == 'SIM' &&
-                        <TextoOpcional textosOpcionais='Vermifugado(a)' />}
-                    {select.TB_ANIMAL_MICROCHIP == 'SIM' &&
-                        <TextoOpcional textosOpcionais='Microchipado(a)' />}
-                </div>
-                <div style={styles.GroupBox} className="groupBox">
-                    <p style={styles.Titulo}>Descrição</p>
-                    <TextoMenor textoDescricao={select.TB_ANIMAL_DESCRICAO} />
-                    <TextoMenor textoTitulo='Local do resgate:' textoDescricao={select.TB_ANIMAL_LOCAL_RESGATE} />
-                </div>
-                <div style={styles.GroupBox} className="groupBox">
-                    <p style={styles.Titulo}>Localização</p>
-                    <div style={styles.GroupBox2}>
-                        <p style={styles.TextoClaro}>{select.TB_ANIMAL_LOCALIZACAO_CIDADE}</p>
-                        <p style={styles.TextoEscuro}>{select.TB_ANIMAL_LOCALIZACAO_UF}</p>
-                    </div>
-                    <div style={styles.GroupBox2}>
-                        <p style={styles.TextoClaro}>{select.TB_ANIMAL_LOCALIZACAO_BAIRRO},</p>
-                    </div>
-                    <div style={styles.GroupBox2}>
-                        <p style={styles.TextoClaro}>{select.TB_ANIMAL_LOCALIZACAO_RUA}</p>
-                    </div>
-                </div>
-                <div style={styles.ConjuntoBotao}>
-                    <BotaoCadastrar onClick={() => window.location.href = '/'} texto='Adotar' />
-                </div>
-            </div>
-        </div>
+        <>
+            {!autorizado ? (
+                <ContainerCadastro>
+                    <p style={{ color: '#fff', fontSize: 25 }}>Faça seu Login para acessar essa página</p>
+                </ContainerCadastro>
+            ) : (<>
+                {carregando ? <p>Carregando</p> :
+                    <>
+                        <div style={styles.ContainerMain}>
+                            <div style={styles.Container}>
+                                <div className="imgFicha">
+                                    <img src={urlAPI + 'selanimalimg/' + id} alt="Imagem do animal" />
+                                </div>
+                                <div style={styles.Conjunto1}>
+                                    <TextoComum textoTitulo='Nome:' textoDescricao={select.TB_ANIMAL_NOME} />
+                                    <TextoComum textoTitulo='Porte:' textoDescricao={select.TB_ANIMAL_PORTE == 'PEQUENO' ? 'Pequeno' : select.TB_ANIMAL_PORTE == 'MEDIO' ? 'Médio' : select.TB_ANIMAL_PORTE == 'GRANDE' ? 'Grande' : select.TB_ANIMAL_PORTE} />
+                                </div>
+                                <div style={styles.Conjunto2} className="groupBox">
+                                    <TextoComum textoTitulo={select.TB_ANIMAL_PESO} textoDescricao='Kg' />
+                                    <div style={styles.Barras} className="Barras">
+                                        <TextoComum textoDescricao={select.TB_ANIMAL_SEXO == 'MACHO' ? 'Macho' : 'Fêmea'} />
+                                    </div>
+                                    <TextoComum textoTitulo={select.TB_ANIMAL_IDADE} textoDescricao={tipoIdade} />
+                                </div>
+                                {temperamentos.length !== 0 &&
+                                    <div style={styles.Conjunto3}>
+                                        <TextoComum textoTitulo='Temperamento:' />
+                                        {temperamentos.map((item, index) => {
+                                            return (
+                                                <TextoMultiplo textoMultiplo={item.TB_TEMPERAMENTO.TB_TEMPERAMENTO_TIPO} key={index} />
+                                            )
+                                        })}
+                                    </div>}
+                                {situacoes.length !== 0 &&
+                                    <div style={styles.Conjunto3}>
+                                        <TextoComum textoTitulo='Situação:' />
+                                        {situacoes.map((item, index) => {
+                                            return (
+                                                <TextoMultiplo textoMultiplo={item.TB_SITUACAO.TB_SITUACAO_DESCRICAO} key={index} />
+                                            )
+                                        })}
+                                    </div>}
+                                {traumas.length !== 0 &&
+                                    <div style={styles.Conjunto3}>
+                                        <TextoComum textoTitulo='Trauma:' />
+                                        {traumas.map((item, index) => {
+                                            return (
+                                                <TextoMultiplo textoMultiplo={item.TB_TRAUMA.TB_TRAUMA_DESCRICAO} key={index} />
+                                            )
+                                        })}
+                                    </div>}
+                                {select.TB_ANIMAL_CUIDADO_ESPECIAL &&
+                                    <div style={styles.Conjunto3}>
+                                        <TextoComum textoTitulo='Cuidado:' />
+                                        <TextoMultiplo textoMultiplo={select.TB_ANIMAL_CUIDADO_ESPECIAL} />
+                                    </div>}
+                                <div style={styles.Conjunto4}>
+                                    {select.TB_ANIMAL_CASTRADO == 'SIM' &&
+                                        <TextoOpcional textosOpcionais='Castrado(a)' />}
+                                    {select.TB_ANIMAL_VERMIFUGADO == 'SIM' &&
+                                        <TextoOpcional textosOpcionais='Vermifugado(a)' />}
+                                    {select.TB_ANIMAL_MICROCHIP == 'SIM' &&
+                                        <TextoOpcional textosOpcionais='Microchipado(a)' />}
+                                </div>
+                                <div style={styles.GroupBox} className="groupBox">
+                                    <p style={styles.Titulo}>Descrição</p>
+                                    <TextoMenor textoDescricao={select.TB_ANIMAL_DESCRICAO} />
+                                    <TextoMenor textoTitulo='Local do resgate:' textoDescricao={select.TB_ANIMAL_LOCAL_RESGATE} />
+                                </div>
+                                <div style={styles.GroupBox} className="groupBox">
+                                    <p style={styles.Titulo}>Localização</p>
+                                    <div style={styles.GroupBox2}>
+                                        <p style={styles.TextoClaro}>{select.TB_ANIMAL_LOCALIZACAO_CIDADE}</p>
+                                        <p style={styles.TextoEscuro}>{select.TB_ANIMAL_LOCALIZACAO_UF}</p>
+                                    </div>
+                                    <div style={styles.GroupBox2}>
+                                        <p style={styles.TextoClaro}>{select.TB_ANIMAL_LOCALIZACAO_BAIRRO},</p>
+                                    </div>
+                                    <div style={styles.GroupBox2}>
+                                        <p style={styles.TextoClaro}>{select.TB_ANIMAL_LOCALIZACAO_RUA}</p>
+                                    </div>
+                                </div>
+                                <div style={styles.ConjuntoBotao}>
+                                    <BotaoCadastrar onClick={() => window.location.href = '/'} texto='Adotar' />
+                                </div>
+                            </div>
+                        </div>
+                    </>
+                }</>
+            )}
+        </>
     )
 }
 
