@@ -45,6 +45,7 @@ const CadAnimal = () => {
     const [traumas, setTraumas] = useState();
     const [temperamentos, setTemperamentos] = useState();
 
+    const [autorizado, setAutorizado] = useState(false);
     const [carregando, setCarregando] = useState(true);
 
     const Cadastrar = () => {
@@ -145,10 +146,10 @@ const CadAnimal = () => {
             const formData = new FormData();
             formData.append('image', image);
 
-            const url = urlAPI + 'altanimal/' + response.data.TB_ANIMAL_IDD;
-            const responseImg = await axios.put(url, formData)
-            console.log(responseImg.data)
-            setMessageCad(response.data.message)
+            // const url = urlAPI + 'altanimal/' + response.data.TB_ANIMAL_IDD;
+            // const responseImg = await axios.put(url, formData)
+            // console.log(responseImg.data)
+            // setMessageCad(response.data.message)
         } catch (error) {
 
             setMessageCad('Houve um erro ao cadastrar')
@@ -159,24 +160,6 @@ const CadAnimal = () => {
     const [image, setImage] = useState(null);
     const [message, setMessage] = useState('');
     const [messageCad, setMessageCad] = useState('');
-
-    const Enviar = async () => {
-        if (!image) {
-            return console.error('Nenhuma imagem selecionada.');
-
-        }
-        const formData = new FormData();
-        formData.append('image', image);
-
-        await axios.put(urlAPI + 'upload', formData)
-            .then(response => {
-                console.log(response.data);
-                setMessage(response.data)
-            }).catch(error => {
-                console.error(error);
-                setMessage(error)
-            })
-    }
 
     const handleImageChange = (e) => {
         const selectedImage = e.target.files[0];
@@ -287,7 +270,6 @@ const style = ({
         marginVertical: 5,
         justifyContent: "space-evenly",
         display: "flex",
-
     },
     containerCampos: {
         width: '95%',

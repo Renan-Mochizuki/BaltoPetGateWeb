@@ -76,7 +76,7 @@ const Animal = () => {
                                     </div>
                                     <a href={"/Ficha/" + item.TB_ANIMAL_ID}>
                                         <div className="animalImgContainer">
-                                            <img src={ProcurarImg(item.TB_ANIMAL_ID)} alt="Imagem do animal" />
+                                            <img src={urlAPI + 'selanimalimg/' + item.TB_ANIMAL_ID} alt="Imagem do animal" />
                                         </div>
                                     </a>
                                     <div style={styles.cardContent}>
@@ -85,8 +85,12 @@ const Animal = () => {
                                             <p style={{ color: corNomeExibirAnimal }}>{item.TB_ANIMAL_NOME} </p>
                                         </div>
                                         <div style={styles.nomeAnimal}>
-                                            <p style={{ color: corMaiorAnimal }}>Temperamentos: &nbsp;</p>
-                                            <p style={{ color: corNomeExibirAnimal }}>{item.TB_ANIMAL_LOCALIZACAO_CIDADE} </p>
+                                            <p style={{ color: corMaiorAnimal }}>Descrição: &nbsp;</p>
+                                            <p style={{ color: corNomeExibirAnimal }}>{item.TB_ANIMAL_DESCRICAO} </p>
+                                        </div>
+                                        <div style={styles.nomeAnimal}>
+                                            <p style={{ color: corMaiorAnimal }}>Gênero: &nbsp;</p>
+                                            <p style={{ color: corNomeExibirAnimal }}>{item.TB_ANIMAL_SEXO == 'MACHO' ? 'Macho' : 'Fêmea'} </p>
                                         </div>
                                     </div>
                                 </div>
