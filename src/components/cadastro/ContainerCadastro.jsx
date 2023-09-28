@@ -12,15 +12,12 @@ const ContainerCadastro = (props) => {
 const style = ({
   container: {
     width: '100%',
-    height: '100%',
+    // height: '100%',
     backgroundColor: corFundoCad,
     display: 'flex',
     alignItems: 'center',
     justifyContent: 'center',
-    // flex: 1,
     flexDirection: 'column',
-    
-    minHeight: '100%'
   },
   imagem: {
     height: 150,

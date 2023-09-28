@@ -98,6 +98,15 @@ const CadAnimal = () => {
     }
 
     useEffect(() => {
+        const Autorizar = async () => {
+            const decodedToken = await DecodificarToken();
+            if (!decodedToken) {
+                window.location.replace('/Login');
+            } else {
+                setAutorizado(true);
+            }
+        }
+        Autorizar();
         PegarId().then(() => {
             ListarOpcoes().then(() => {
                 setCarregando(false);
@@ -108,7 +117,7 @@ const CadAnimal = () => {
     const InserirDados = async () => {
         setMessageCad('Cadastrando...')
         try {
-            const response = await axios.post(urlLocal + 'cadanimal', {
+            const response = await axios.post(urlAPI + 'cadanimal', {
                 TB_PESSOA_ID: TB_PESSOA_IDD,
                 TB_ANIMAL_NOME: nome,
                 TB_ANIMAL_IDADE: idade,
@@ -136,10 +145,10 @@ const CadAnimal = () => {
             const formData = new FormData();
             formData.append('image', image);
 
-            const url = urlLocal + 'altanimal/' + response.data.TB_ANIMAL_IDD;
-            console.log(url)
+            const url = urlAPI + 'altanimal/' + response.data.TB_ANIMAL_IDD;
             const responseImg = await axios.put(url, formData)
-            setMessageCad(responseImg.data.message)
+            console.log(responseImg.data)
+            setMessageCad(response.data.message)
         } catch (error) {
 
             setMessageCad('Houve um erro ao cadastrar')
@@ -183,74 +192,80 @@ const CadAnimal = () => {
 
     return (
         <ContainerCadastro>
-            {carregando ? <p>Carregando</p> :
-                <>
-                    <GroupBox titulo='Insira uma imagem do animal'>
-                        <form style={style.form}>
-                            {image && <img style={style.Imagem} src={image} alt='Imagem do animal' />}
-                            <input style={style.Img} type='file' id='image' onChange={handleImageChange} />
-                            <label style={style.Label} className="escolhaImg" htmlFor="image">Escolha um arquivo</label>
-                        </form>
-                        {message && <p>{message}</p>}
-                    </GroupBox>
-                    <GroupBox titulo='Informações'>
-                        <CampoSimples placeholder="Nome do animal" set={setNome} />
+            <>
+                {!autorizado ? (
+                    <p>Faça seu Login</p>
+                ) : (<>
+                    {carregando ? <p>Carregando</p> :
+                        <>
+                            <GroupBox titulo='Insira uma imagem do animal'>
+                                <form style={style.form}>
+                                    {image && <img style={style.Imagem} src={image} alt='Imagem do animal' />}
+                                    <input style={style.Img} type='file' id='image' onChange={handleImageChange} />
+                                    <label style={style.Label} className="escolhaImg" htmlFor="image">Escolha um arquivo</label>
+                                </form>
+                                {message && <p>{message}</p>}
+                            </GroupBox>
+                            <GroupBox titulo='Informações'>
+                                <CampoSimples placeholder="Nome do animal" set={setNome} />
 
-                        <div style={style.containerCampos}>
-                            <Campo placeholder="Idade" type="numeric" set={setIdade} />
-                            <Dropdown options={['Meses', 'Anos']} set={setIdadeTipo} texto='Ano(s) ou Mes(es)' />
-                        </div>
-                        <div style={style.ContainerDublo}>
-                            <div style={style.campo}>
-                                <p style={style.Texto}>Porte:</p>
-                                <Dropdown options={['Pequeno', 'Médio', 'Grande']} texto='Porte' set={setPorte} />
-                            </div>
-                            <div style={style.campo}>
-                                <Campo placeholder="Peso" type="numeric" set={setPeso} />
-                                <p style={style.Texto}>Kg</p>
-                            </div>
-                        </div>
-                        <div style={style.containerCampos}>
-                            <Dropdown options={['Cachorro', 'Gato']} texto='Especie' set={setEspecie} />
-                            <Dropdown options={['Macho', 'Fêmea']} texto='Sexo' set={setSexo} />
-                        </div>
-                    </GroupBox>
+                                <div style={style.containerCampos}>
+                                    <Campo placeholder="Idade" type="numeric" set={setIdade} />
+                                    <Dropdown options={['Meses', 'Anos']} set={setIdadeTipo} texto='Ano(s) ou Mes(es)' />
+                                </div>
+                                <div style={style.ContainerDublo}>
+                                    <div style={style.campo}>
+                                        <p style={style.Texto}>Porte:</p>
+                                        <Dropdown options={['Pequeno', 'Médio', 'Grande']} texto='Porte' set={setPorte} />
+                                    </div>
+                                    <div style={style.campo}>
+                                        <Campo placeholder="Peso" type="numeric" set={setPeso} />
+                                        <p style={style.Texto}>Kg</p>
+                                    </div>
+                                </div>
+                                <div style={style.containerCampos}>
+                                    <Dropdown options={['Cachorro', 'Gato']} texto='Especie' set={setEspecie} />
+                                    <Dropdown options={['Macho', 'Fêmea']} texto='Sexo' set={setSexo} />
+                                </div>
+                            </GroupBox>
 
-                    <GroupBox titulo='Descrição'>
-                        <CampoSimples placeholder="Minha historia" set={setDescricao} />
-                        <CampoSimples placeholder="Local do resgate" set={setLocalResgate} opcional />
-                        <CampoSimples placeholder="Cuidados necessarios com o pet" set={setCuidadoEspecial} opcional />
-                    </GroupBox>
-                    <GroupBox titulo='Saúde'>
-                        <RadioButton options={['Saudável', 'Doente']} set={setSaude} />
-                    </GroupBox>
-                    <GroupBox titulo='Castrado'>
-                        <RadioButton options={['Sim', 'Não']} set={setCastrado} />
-                    </GroupBox>
-                    <GroupBox titulo='Vermifugado'>
-                        <RadioButton options={['Sim', 'Não']} set={setVermifugado} />
-                    </GroupBox>
-                    <GroupBox titulo='Microchipado'>
-                        <RadioButton options={['Sim', 'Não']} set={setMicrochip} />
-                    </GroupBox>
-                    <GroupBox titulo='Temperamento'>
-                        <CampoOpcoes dados={temperamentosBanco} set={setTemperamentos} />
-                    </GroupBox>
-                    <GroupBox titulo='Situação'>
-                        <CampoOpcoes dados={situacoesBanco} set={setSituacoes} />
-                    </GroupBox>
-                    <GroupBox titulo='Traumas (opcional)'>
-                        <CampoOpcoes dados={traumasBanco} set={setTraumas} />
-                    </GroupBox>
-                    <GroupBox titulo='Localização'>
-                        <CampoEndereco set2={setUf} set3={setCidade} set4={setBairro} set5={setRua} />
-                    </GroupBox>
-                    {/* <CheckBoxComponent texto='Animal em estado de alerta' set={setAlerta} /> */}
-                    {messageCad && <p style={{ color: '#fff' }}>{messageCad}</p>}
-                    <BotaoCadastrar onClick={Cadastrar} texto='Cadastrar' />
-                </>
-            }
-        </ContainerCadastro>
+                            <GroupBox titulo='Descrição'>
+                                <CampoSimples placeholder="Minha historia" set={setDescricao} />
+                                <CampoSimples placeholder="Local do resgate" set={setLocalResgate} opcional />
+                                <CampoSimples placeholder="Cuidados necessarios com o pet" set={setCuidadoEspecial} opcional />
+                            </GroupBox>
+                            <GroupBox titulo='Saúde'>
+                                <RadioButton options={['Saudável', 'Doente']} set={setSaude} />
+                            </GroupBox>
+                            <GroupBox titulo='Castrado'>
+                                <RadioButton options={['Sim', 'Não']} set={setCastrado} />
+                            </GroupBox>
+                            <GroupBox titulo='Vermifugado'>
+                                <RadioButton options={['Sim', 'Não']} set={setVermifugado} />
+                            </GroupBox>
+                            <GroupBox titulo='Microchipado'>
+                                <RadioButton options={['Sim', 'Não']} set={setMicrochip} />
+                            </GroupBox>
+                            <GroupBox titulo='Temperamento'>
+                                <CampoOpcoes dados={temperamentosBanco} set={setTemperamentos} />
+                            </GroupBox>
+                            <GroupBox titulo='Situação'>
+                                <CampoOpcoes dados={situacoesBanco} set={setSituacoes} />
+                            </GroupBox>
+                            <GroupBox titulo='Traumas (opcional)'>
+                                <CampoOpcoes dados={traumasBanco} set={setTraumas} />
+                            </GroupBox>
+                            <GroupBox titulo='Localização'>
+                                <CampoEndereco set2={setUf} set3={setCidade} set4={setBairro} set5={setRua} />
+                            </GroupBox>
+                            {/* <CheckBoxComponent texto='Animal em estado de alerta' set={setAlerta} /> */}
+                            {messageCad && <p style={{ color: '#fff' }}>{messageCad}</p>}
+                            <BotaoCadastrar onClick={Cadastrar} texto='Cadastrar' />
+                        </>
+                    }</>
+                )}
+            </>
+        </ContainerCadastro >
     )
 }
 const style = ({

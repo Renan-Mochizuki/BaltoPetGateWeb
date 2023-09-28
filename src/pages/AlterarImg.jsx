@@ -1,9 +1,9 @@
 import React, { useEffect, useState } from "react";
-import DecodificarToken from "../../utils/DecodificarToken";
+import DecodificarToken from "../utils/DecodificarToken";
 import axios from "axios";
-import { urlLocal } from "../../constants";
+import { urlLocal } from "../constants";
 
-const Teste = () => {
+const AlterarImg = () => {
   const [autorizado, setAutorizado] = useState(false);
   const [image, setImage] = useState(null);
   const [message, setMessage] = useState('');
@@ -57,4 +57,4 @@ const Teste = () => {
   );
 }
 
-export default Teste;
+export default AlterarImg;

@@ -15,13 +15,26 @@ const Ficha = () => {
 
     const [select, setSelect] = useState([]);
 
+    const [situacoes, setSituacoes] = useState([]);
+    const [traumas, setTraumas] = useState([]);
+    const [temperamentos, setTemperamentos] = useState([]);
+
     const Selecionar = async () => {
-        await axios.post(urlAPI + 'selanimal/filtrar', {
+        axios.post(urlAPI + 'selanimal/filtrar', {
             TB_ANIMAL_ID: id
         }).then((response) => {
             setSelect(response.data[0]);
         }).catch((error) => {
             ToastAndroid.show('Erro ao exibir itens ' + error.response.data.message, ToastAndroid.SHORT);
+        })
+        axios.get(urlAPI + 'seltemperamentos/' + id).then(response => {
+            setTemperamentos(response.data)
+        })
+        axios.get(urlAPI + 'selsituacoes/' + id).then(response => {
+            setSituacoes(response.data)
+        })
+        axios.get(urlAPI + 'seltraumas/' + id).then(response => {
+            setTraumas(response.data)
         })
     };
 
@@ -42,8 +55,8 @@ const Ficha = () => {
     return (
         <div style={styles.ContainerMain}>
             <div style={styles.Container}>
-                <div style={styles.ImgContainer}>
-                    <img style={styles.Imagem} src={urlAPI + 'selanimalimg/' + id} alt="Imagem do animal" />
+                <div className="imgFicha">
+                    <img src={urlAPI + 'selanimalimg/' + id} alt="Imagem do animal" />
                 </div>
                 <div style={styles.Conjunto1}>
                     <TextoComum textoTitulo='Nome:' textoDescricao={select.TB_ANIMAL_NOME} />
@@ -56,22 +69,38 @@ const Ficha = () => {
                     </div>
                     <TextoComum textoTitulo={select.TB_ANIMAL_IDADE} textoDescricao={tipoIdade} />
                 </div>
-                <div style={styles.Conjunto3}>
-                    <TextoComum textoTitulo='Temperamento:' />
-                    <TextoMultiplo textoMultiplo='Aaaaaa' />
-                </div>
-                <div style={styles.Conjunto3}>
-                    <TextoComum textoTitulo='Situação:' />
-                    <TextoMultiplo textoMultiplo='Aaaaaa' />
-                </div>
-                <div style={styles.Conjunto3}>
-                    <TextoComum textoTitulo='Trauma:' />
-                    <TextoMultiplo textoMultiplo='Aaaaaa' />
-                </div>
-                <div style={styles.Conjunto3}>
-                    <TextoComum textoTitulo='Cuidado:' />
-                    <TextoMultiplo textoMultiplo='Aaaaaa' />
-                </div>
+                {temperamentos.length !== 0 &&
+                    <div style={styles.Conjunto3}>
+                        <TextoComum textoTitulo='Temperamento:' />
+                        {temperamentos.map((item, index) => {
+                            return (
+                                <TextoMultiplo textoMultiplo={item.TB_TEMPERAMENTO.TB_TEMPERAMENTO_TIPO} key={index} />
+                            )
+                        })}
+                    </div>}
+                {situacoes.length !== 0 &&
+                    <div style={styles.Conjunto3}>
+                        <TextoComum textoTitulo='Situação:' />
+                        {situacoes.map((item, index) => {
+                            return (
+                                <TextoMultiplo textoMultiplo={item.TB_SITUACAO.TB_SITUACAO_DESCRICAO} key={index} />
+                            )
+                        })}
+                    </div>}
+                {traumas.length !== 0 &&
+                    <div style={styles.Conjunto3}>
+                        <TextoComum textoTitulo='Trauma:' />
+                        {traumas.map((item, index) => {
+                            return (
+                                <TextoMultiplo textoMultiplo={item.TB_TRAUMA.TB_TRAUMA_DESCRICAO} key={index} />
+                            )
+                        })}
+                    </div>}
+                {select.TB_ANIMAL_CUIDADO_ESPECIAL &&
+                    <div style={styles.Conjunto3}>
+                        <TextoComum textoTitulo='Cuidado:' />
+                        <TextoMultiplo textoMultiplo={select.TB_ANIMAL_CUIDADO_ESPECIAL} />
+                    </div>}
                 <div style={styles.Conjunto4}>
                     {select.TB_ANIMAL_CASTRADO == 'SIM' &&
                         <TextoOpcional textosOpcionais='Castrado(a)' />}
@@ -83,7 +112,6 @@ const Ficha = () => {
                 <div style={styles.GroupBox} className="groupBox">
                     <p style={styles.Titulo}>Descrição</p>
                     <TextoMenor textoDescricao={select.TB_ANIMAL_DESCRICAO} />
-                    <TextoMenor textoTitulo='Cor(es):' textoDescricao='dhgfdyfgdfgdifgdfgdfgdufgd' />
                     <TextoMenor textoTitulo='Local do resgate:' textoDescricao={select.TB_ANIMAL_LOCAL_RESGATE} />
                 </div>
                 <div style={styles.GroupBox} className="groupBox">
@@ -100,7 +128,7 @@ const Ficha = () => {
                     </div>
                 </div>
                 <div style={styles.ConjuntoBotao}>
-                    <BotaoCadastrar />
+                    <BotaoCadastrar onClick={() => window.location.href = '/'} texto='Adotar' />
                 </div>
             </div>
         </div>
@@ -179,16 +207,6 @@ const styles = ({
         display: 'flex',
         justifyContent: 'center',
         flexDirection: "row",
-    },
-    ImgContainer: {
-        width: '100%',
-        height: 400,
-        display: 'flex',
-        justifyContent: 'center',
-        alignItems: 'center',
-    },
-    Imagem: {
-        height: '100%'
     },
     GroupBox2: {
         margin: '1%',

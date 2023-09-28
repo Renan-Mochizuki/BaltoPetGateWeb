@@ -42,7 +42,7 @@ const CadUsuario = () => {
       await localStorage.removeItem('token');
       await localStorage.setItem('token', TokenUsuario);
       setTimeout(() => {
-        window.location.replace('/Animal');
+        window.location.replace('/');
       }, 1500)
     }).catch(error => {
       let erro = error.response.data.message;
