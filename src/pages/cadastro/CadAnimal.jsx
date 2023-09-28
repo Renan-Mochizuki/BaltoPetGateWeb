@@ -143,15 +143,7 @@ const CadAnimal = () => {
                 SITUACOES: situacoes,
                 TRAUMAS: traumas,
             })
-            const formData = new FormData();
-            formData.append('image', image);
-
-            // const url = urlAPI + 'altanimal/' + response.data.TB_ANIMAL_IDD;
-            // const responseImg = await axios.put(url, formData)
-            // console.log(responseImg.data)
-            // setMessageCad(response.data.message)
         } catch (error) {
-
             setMessageCad('Houve um erro ao cadastrar')
             console.error('Erro ao cadastrar:', error);
         }

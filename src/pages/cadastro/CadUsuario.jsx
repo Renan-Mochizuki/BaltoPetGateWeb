@@ -44,23 +44,14 @@ const CadUsuario = () => {
         TB_PESSOA_EMAIL: email,
         TB_PESSOA_SENHA: senha,
       }).then(async response => {
-        // const TokenUsuario = response.data.token;
-        // await axios.put(urlAPI + 'altpessoa/' + response.data.TB_PESSOA_IDD, formData)
-        //   .then(async responsePut => {
         setMensagem('Cadastrado!');
         await localStorage.removeItem('token');
         await localStorage.setItem('token', TokenUsuario);
         setTimeout(() => {
           window.location.replace('/');
         }, 1500)
-        // }).catch(error => {
-        //   let erro = error.response.data.message;
-        //   // setMensagem(erro);
-        //   console.error(erro)
-        // })
       }).catch(error => {
         let erro = error.response;
-        // setMensagem(erro);
         console.error(erro)
       })
     }

@@ -93,20 +93,6 @@ const Login = () => {
                         <div className="basic"></div>
                     </div>
                 </div>}
-
-            <button onClick={async () => {
-                const TokenUsuario = await localStorage.getItem('token');
-                if (TokenUsuario == null) {
-                    setCarregando(true);
-                    await localStorage.setItem('token', 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJUQl9QRVNTT0FfSUREIjoxNSwiVEJfVElQT19JREQiOjEsImlhdCI6MTY5NDcxMjMwMywiZXhwIjoxNjk5ODk2MzAzfQ.9fxNd1tW70-m3LXUVDD7nnb4IgH0cyoMgX78rhVtfaE');
-                    setTimeout(() => {
-                        window.location.replace('/');
-                    }, 1500);
-                }
-                window.location.replace('/');
-            }}>
-                <p>PULAR</p>
-            </button>
         </div>
     );
 };
