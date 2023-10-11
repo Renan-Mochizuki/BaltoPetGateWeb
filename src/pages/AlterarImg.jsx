@@ -1,23 +1,24 @@
 import React, { useEffect, useState } from "react";
 import DecodificarToken from "../utils/DecodificarToken";
 import axios from "axios";
-import { urlAPI, urlLocal } from "../constants";
+import { corBotaoCad, urlAPI, urlLocal } from "../constants";
 
 const AlterarImg = () => {
-  const [autorizado, setAutorizado] = useState(false);
+  const [id, setId] = useState();
   const [image, setImage] = useState(null);
   const [message, setMessage] = useState('');
 
 
   const Enviar = async () => {
+    setMessage('')
     if (!image) {
       return console.error('Nenhuma imagem selecionada.');
     }
 
     const formData = new FormData();
-    formData.append('image', image);
-    console.log(formData)
-    await axios.put(urlAPI + 'altpessoa/14', formData)
+    formData.append('img', image);
+
+    await axios.put(urlAPI + 'alt' + id, formData)
       .then(response => {
         console.log(response.data);
         setMessage(response.data.message)
@@ -31,8 +32,10 @@ const AlterarImg = () => {
     <>
       <div>
         <form onSubmit={e => e.preventDefault()}>
+          <p style={{ display: 'inline-block', margin: 5 }}>alt</p> <input type='text' id='id' onChange={e => setId(e.target.value)} placeholder="Rota para alterar" />
+          <p style={{ display: 'inline-block', margin: 5 }}>Ex: pessoa/1</p><br />
           <input type='file' id='image' onChange={e => setImage(e.target.files[0])} /> <br />
-          <button onClick={Enviar}>Enviar Imagem</button>
+          <button onClick={Enviar} style={{ backgroundColor: corBotaoCad, padding: 5, borderRadius: 25, marginTop: 20 }}>Enviar Imagem</button>
         </form>
         {message && <p>{message}</p>}
       </div>
