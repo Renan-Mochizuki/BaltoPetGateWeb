@@ -16,7 +16,6 @@ const Ficha = () => {
     let tipoIdade;
 
     const [select, setSelect] = useState([]);
-
     const [situacoes, setSituacoes] = useState([]);
     const [traumas, setTraumas] = useState([]);
     const [temperamentos, setTemperamentos] = useState([]);

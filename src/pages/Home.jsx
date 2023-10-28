@@ -1,12 +1,13 @@
 import React, { useEffect, useState } from "react";
-import DecodificarToken from "../../utils/DecodificarToken";
+import DecodificarToken from "../utils/DecodificarToken";
 import axios from "axios";
-import { corFundo, corHeaderCard, corMaiorAnimal, corNomeExibirAnimal, urlAPI, urlLocal } from "../../constants";
-import { HiOutlineX } from 'react-icons/hi'
+import { corFundo, corHeaderCard, corMaiorAnimal, corNomeExibirAnimal, urlAPI, urlLocal } from "../constants";
 import { BiPlus } from 'react-icons/bi'
-import ContainerCadastro from "../../components/cadastro/ContainerCadastro";
+import { IoIosArrowBack } from 'react-icons/io'
+import ContainerCadastro from "../components/cadastro/ContainerCadastro";
+import Imagem from "../components/geral/Imagem";
 
-const Animal = () => {
+const Home = () => {
     const [autorizado, setAutorizado] = useState(false);
     const [animais, setAnimais] = useState([]);
 
@@ -53,11 +54,11 @@ const Animal = () => {
                     <p style={{ color: '#fff', fontSize: 25 }}>Faça seu Login para acessar essa página</p>
                 </ContainerCadastro>
             ) : (<>
-                {carregando ? <p>Carregando</p> :
-                    <>
+                {carregando ? <p>Carregando...</p> :
+                    <div className="container">
                         <div id="header">
                             <a href="/Login" onClick={() => localStorage.removeItem('token')}  >
-                                <HiOutlineX color="red" size={50} />
+                                <IoIosArrowBack color="white" size={50} />
                             </a>
                             <a href="/CadAnimal" id="botaomais">
                                 <BiPlus color="white" size={50} />
@@ -65,18 +66,18 @@ const Animal = () => {
                         </div>
                         <div style={styles.container}>
                             {animais.map((item, index) => (
-                                <div key={index} style={styles.card}>
-                                    <div style={styles.cardHeader} className="cardHeader">
+                                <div key={index} style={styles.card} className="card">
+                                    <div style={styles.cardHeader}>
                                         <div style={styles.cardUser}>
                                             <div className="profileImg">
-                                                <img src={urlAPI + 'selpessoaimg/' + item.TB_PESSOA_ID} alt="Perfil" />
+                                                <Imagem url={urlAPI + 'selpessoaimg/' + item.TB_PESSOA_ID} alt="Perfil" />
                                             </div>
                                             <p>{item.TB_PESSOA.TB_PESSOA_NOME_PERFIL}</p>
                                         </div>
                                     </div>
                                     <a href={"/Ficha/" + item.TB_ANIMAL_ID}>
                                         <div className="animalImgContainer">
-                                            <img src={urlAPI + 'selanimalimg/' + item.TB_ANIMAL_ID} alt="Imagem do animal" />
+                                            <Imagem url={urlAPI + 'selanimalimg/' + item.TB_ANIMAL_ID} alt="Animal" />
                                         </div>
                                     </a>
                                     <div style={styles.cardContent}>
@@ -96,7 +97,7 @@ const Animal = () => {
                                 </div>
                             ))}
                         </div>
-                    </>
+                    </div>
                 }</>
             )}
         </>
@@ -108,13 +109,12 @@ const styles = ({
         display: 'flex',
         flexDirection: 'column',
         justifyContent: 'center',
-        width: 500,
+        maxWidth: 500,
         minHeight: '100%',
         margin: 'auto',
     },
     card: {
         width: '100%',
-
     },
     cardHeader: {
         display: "flex",
@@ -146,4 +146,5 @@ const styles = ({
         flexDirection: 'row'
     }
 })
-export default Animal;
+
+export default Home;

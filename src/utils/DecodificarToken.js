@@ -1,4 +1,3 @@
-import { chaveToken } from "../constants";
 import jwtDecode from "jwt-decode";
 
 export default async function DecodificarToken() {

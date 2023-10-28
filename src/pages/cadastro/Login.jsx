@@ -31,7 +31,7 @@ const Login = () => {
             await localStorage.setItem('token', TokenUsuario);
             setTimeout(() => {
                 window.location.replace('/');
-            }, 1500);
+            }, 1000);
         }).catch(error => {
             let erro = error.response.data.message;
             setMensagem(erro);
@@ -41,31 +41,17 @@ const Login = () => {
     const [mostrarSenha, setMostrarSenha] = useState(false);
 
     return (
-        <div style={style.container}>
-            <img
-                style={style.imagem} src="./img/Logo.png"
-            />
+        <div style={style.container} className="ContainerCadastro">
+            <img style={style.imagem} src="./img/Logo.png" alt='Logo' />
             {mensagem && <p style={{ color: mensagem == 'Usuário ou senha inválidos.' ? 'red' : '#fff' }}>{mensagem}</p>}
-            <div style={style.containercampo}>
-                <input
-                    onChange={(text) => setEmail(text.target.value)}
-                    placeholder={"Email"}
-                    style={style.campo}
-                />
+            <div style={style.containercampo} className="containercampo">
+                <input onChange={(text) => setEmail(text.target.value)} placeholder={"Email"} style={style.campo} />
             </div>
-            <div style={style.containersenha}>
+            <div style={style.containersenha} className="containercampo">
                 <div style={style.containercamposenha}>
                     <div style={style.caixacampo}>
-                        <input
-                            onChange={(text) => setSenha(text.target.value)}
-                            placeholder={"Senha"}
-                            style={style.campo}
-                            type={mostrarSenha ? 'text' : 'password'}
-                        />
-                        <button
-                            onClick={() => setMostrarSenha(!mostrarSenha)}
-                            style={style.botaoSenha}
-                        >
+                        <input onChange={(text) => setSenha(text.target.value)} placeholder={"Senha"} style={style.campo} type={mostrarSenha ? 'text' : 'password'} />
+                        <button onClick={() => setMostrarSenha(!mostrarSenha)} style={style.botaoSenha}                        >
                             {mostrarSenha ? (
                                 <FaRegEyeSlash color="grey" size={30} />
                             ) : (
@@ -74,10 +60,6 @@ const Login = () => {
                         </button>
                     </div>
                 </div>
-
-                <button onClick={() => console.log('a')} style={{ alignSelf: "flex-end" }} >
-                    <p style={style.esqueceu}>Esqueci minha senha</p>
-                </button>
             </div>
 
             <button onClick={Logar} style={style.botaologin} className="botaoCadastro">
@@ -105,7 +87,6 @@ const style = ({
         alignItems: "center",
         justifyContent: "center",
         width: "100%",
-        height: "100%",
     },
     imagem: {
         backgroundColor: corFundoCad,
@@ -145,7 +126,6 @@ const style = ({
     containercampo: {
         display: "flex",
         flexDirection: "row",
-        width: "40%",
         height: 45,
         margin: 10,
         justifyContent: "flex-start",
@@ -154,11 +134,17 @@ const style = ({
         marginBottom: 15,
         columnGap: 10,
     },
+    containersenha: {
+        display: 'flex',
+        flexDirection: 'column',
+        alignItems: "center",
+        justifyContent: "center",
+    },
     containercamposenha: {
         display: "flex",
         padding: 5,
         flexDirection: "row",
-        width: "100%",
+        minWidth: "100%",
         height: 45,
         margin: 10,
         justifyContent: "flex-start",
@@ -187,15 +173,8 @@ const style = ({
         height: "100%",
         backgroundColor: corFundoCampoCad,
     },
-    containersenha: {
-        width: "40%",
-        display: 'flex',
-        flexDirection: 'column',
-        alignItems: "center",
-        justifyContent: "center",
-    },
     botaoSenha: {
-        marginRight: 10,
+        paddingRight: 10,
     },
     carregandoContainer: {
         flex: 1,
